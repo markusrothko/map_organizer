@@ -248,10 +248,10 @@ public class MapSystem extends Application {
 			double x = event.getX();
 			double y = event.getY();
 			System.out.println(x + " " + y);
-//			if (.getSelectedToggle() != null && namedButton.isSelected()) {
-//				System.out.println("Named +1");
-//			}
-			
+			if (.getSelectedToggle() != null && namedButton.isSelected()) {
+				System.out.println("Named +1");
+			}
+			//uppdaterings test
 			//Kolla radiobutton 
 			//kolla kategori
 			//Skapa plats mha diologruta
