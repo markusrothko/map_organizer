@@ -55,6 +55,7 @@ public class MapSystem extends Application {
 	// categories.setPrefSize(double, double);
 
 	private boolean changed = false;
+	private 		ToggleGroup group = new ToggleGroup();
 	
 
 
@@ -75,7 +76,7 @@ public class MapSystem extends Application {
 		listan.setPrefSize(200, 200);
 		// noneButton.setOnAction(new NoneHandler());
 
-		ToggleGroup group = new ToggleGroup();
+
 
 		VBox vbox = new VBox();
 		MenuBar menuBar = new MenuBar();
@@ -122,9 +123,10 @@ public class MapSystem extends Application {
 		coordinatesButton.setOnAction(new CoordinateSearch());
 
 //        VBox root = new VBox();
-		ToggleGroup namedOrDescribed = new ToggleGroup();
+
 		RadioButton namedButton = new RadioButton("Named");
 		RadioButton describedButton = new RadioButton("Described");
+		//Flytta ut radioknapperna utanför start metoden!
 		namedButton.setToggleGroup(group);
 		describedButton.setToggleGroup(group);
 		
@@ -248,8 +250,10 @@ public class MapSystem extends Application {
 			double x = event.getX();
 			double y = event.getY();
 			System.out.println(x + " " + y);
-			if (.getSelectedToggle() != null && namedButton.isSelected()) {
-				System.out.println("Named +1");
+			if (group.getSelectedToggle() != null 
+					//&& namedButton.isSelected()
+					) {
+				System.out.println(group.getSelectedToggle());
 			}
 			//uppdaterings test
 			//Kolla radiobutton 
