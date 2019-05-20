@@ -54,10 +54,14 @@ public class MapSystem extends Application {
 	ListView<String> cat = new ListView<>(categories);
 	// categories.setPrefSize(double, double);
 
-	private boolean changed = false;
-	private 		ToggleGroup group = new ToggleGroup();
-	
 
+	private boolean changed = false;
+	private ToggleGroup group = new ToggleGroup();
+	private RadioButton namedButton = new RadioButton("Named");
+	private RadioButton describedButton = new RadioButton("Described");
+	private boolean undergroundSelected = false;
+	private boolean busSelected = false;
+	private boolean trainSelected = false;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -124,20 +128,23 @@ public class MapSystem extends Application {
 
 //        VBox root = new VBox();
 
-		RadioButton namedButton = new RadioButton("Named");
-		RadioButton describedButton = new RadioButton("Described");
+
 		//Flytta ut radioknapperna utanför start metoden!
+		// har fixat det
 		namedButton.setToggleGroup(group);
 		describedButton.setToggleGroup(group);
-		
-	    group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+
+
+		//tror inte det nedan behövs längre
+
+/*	    group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 	        public void changed(ObservableValue<? extends Toggle> ov,
 	            Toggle old_toggle, Toggle new_toggle) {
 	          if (group.getSelectedToggle() != null) {
 	            System.out.println(group.getSelectedToggle().toString());
 	          }
 	        }
-	      });
+	      });*/
 	    
 	   
 	    
@@ -200,14 +207,23 @@ public class MapSystem extends Application {
 				case "Underground":
 					//gör alla undergroundplatser synliga
 					System.out.println(nev);
+					undergroundSelected = true;
+					trainSelected = false;
+					busSelected = false;
 					break;
 				case "Train":
 					//gör alla trainplatser synliga
 					System.out.println(nev);
+					undergroundSelected = false;
+					trainSelected = true;
+					busSelected = false;
 					break;
 				case "Bus":
 					//gör alla busplatser synliga
 					System.out.println(nev);
+					undergroundSelected = false;
+					trainSelected = false;
+					busSelected = true;
 					break;
 				default:
 				//gör category null
@@ -249,12 +265,39 @@ public class MapSystem extends Application {
 		public void handle(MouseEvent event) {
 			double x = event.getX();
 			double y = event.getY();
-			System.out.println(x + " " + y);
-			if (group.getSelectedToggle() != null 
-					//&& namedButton.isSelected()
-					) {
-				System.out.println(group.getSelectedToggle());
+		//	System.out.println(x + " " + y);
+/*			if (group.getSelectedToggle() == null)
+			{
+				System.out.println("Inget valt");
+				return;
+				//&& namedButton.isSelected()
+
+				//System.out.println(group.getSelectedToggle());
 			}
+			if (group.getSelectedToggle().toString().contains("Named"))
+			{
+				System.out.println("Named funkar");
+					//&& namedButton.isSelected()
+
+				//System.out.println(group.getSelectedToggle());
+			}
+			if (group.getSelectedToggle().toString().contains("Described"))
+			{
+				System.out.println("Described funkar");
+				//&& namedButton.isSelected()
+
+				//System.out.println(group.getSelectedToggle());
+			}*/
+			if ((group.getSelectedToggle().toString().contains("Described")) && undergroundSelected) {
+				System.out.println("Described funkar tillsammans med underground");
+			}
+			if ((group.getSelectedToggle().toString().contains("Described")) && busSelected) {
+				System.out.println("Described funkar tillsammans med buss");
+			}
+			if ((group.getSelectedToggle().toString().contains("Described")) && trainSelected) {
+				System.out.println("Described funkar tillsammans med tåg");
+			}
+
 			//uppdaterings test
 			//Kolla radiobutton 
 			//kolla kategori
