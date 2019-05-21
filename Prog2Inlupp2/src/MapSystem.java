@@ -266,7 +266,7 @@ public class MapSystem extends Application {
 			double x = event.getX();
 			double y = event.getY();
 			//new NewNamePlace();
-			
+			//hejsan
 			TextInputDialog dialog = new TextInputDialog("");
 			dialog.setTitle("Text Input Dialog");
 
