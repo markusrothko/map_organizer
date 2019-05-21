@@ -117,6 +117,9 @@ public class MapSystem extends Application {
 		hboxTop.setAlignment(Pos.CENTER);
 		Button newButton = new Button("New");
 		newButton.setOnAction(new newButtonHandler());
+
+		VBox vbs = new VBox(10);
+		vbs.getChildren().addAll(namedButton, describedButton);
 		
 		Button searchButton = new Button("Search");
 		// searchButton.setOnAction(new SearchHandler());
@@ -153,7 +156,7 @@ public class MapSystem extends Application {
 	    
 	   
 
-		hboxTop.getChildren().addAll(newButton, namedButton, describedButton, wordField, searchButton, hideButton,
+		hboxTop.getChildren().addAll(newButton, vbs, wordField, searchButton, hideButton,
 				removeButton, coordinatesButton);
 		root.setTop(vbox);
 		// root.setCenter(imageView);
@@ -476,6 +479,16 @@ public class MapSystem extends Application {
 			}
 
 		}
+	}
+
+	class NoneHandler implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent event) {
+			NoneButtonAction();
+		}
+	}
+
+	public void NoneButtonAction() {
+		System.out.println("Hide Category clicked");
 	}
 
 
