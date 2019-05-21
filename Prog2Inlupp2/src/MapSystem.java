@@ -266,6 +266,17 @@ public class MapSystem extends Application {
 			double x = event.getX();
 			double y = event.getY();
 			//new NewNamePlace();
+			String answer;
+			 TextInputDialog dialog = new TextInputDialog("");
+			 dialog.setTitle("Text Input Dialog");
+			 
+			 dialog.setContentText("Please the name of the place");
+			 Optional<String> result = dialog.showAndWait();
+			 if (result.isPresent()){
+			     System.out.println("Your name: " + result.get());
+			 }
+           
+               
 		//	System.out.println(x + " " + y);
 /*			if (group.getSelectedToggle() == null)
 			{
@@ -307,6 +318,9 @@ public class MapSystem extends Application {
 			}
 			else if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
 				System.out.println("Named funkar tillsammans med tåg");
+			}
+			else {
+				System.out.println("Inget");
 			}
 
 			//uppdaterings test
