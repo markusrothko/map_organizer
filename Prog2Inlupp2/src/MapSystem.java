@@ -78,7 +78,7 @@ public class MapSystem extends Application {
 		noneButton.setAlignment(Pos.CENTER);
 		listan.getChildren().add(noneButton);
 		listan.setPrefSize(200, 200);
-		noneButton.setOnAction(new NoneHandler());
+		noneButton.setOnAction(new NoneButtonHandler());
 
 
 
@@ -122,11 +122,11 @@ public class MapSystem extends Application {
 		vbs.getChildren().addAll(namedButton, describedButton);
 		
 		Button searchButton = new Button("Search");
-		// searchButton.setOnAction(new SearchHandler());
+		searchButton.setOnAction(new SearchHandler());
 		Button hideButton = new Button("Hide");
-		// hideButton.setOnAction(new InsertHandler());
+		hideButton.setOnAction(new HideHandler());
 		Button removeButton = new Button("Remove");
-		// removeButton.setOnAction(new InsertHandler());
+		removeButton.setOnAction(new RemoveHandler());
 		Button coordinatesButton = new Button("Coordinates");
 		coordinatesButton.setOnAction(new CoordinateSearch());
 
@@ -481,15 +481,45 @@ public class MapSystem extends Application {
 		}
 	}
 
-	class NoneHandler implements EventHandler<ActionEvent> {
+	class SearchHandler implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent event) {
+			SearchButtonAction();
+		}
+	}
+
+	public void SearchButtonAction() {
+		System.out.println("Search button clicked");
+	}
+
+	class HideHandler implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent event) {
+			HideButtonAction();
+		}
+	}
+
+	public void HideButtonAction() {
+		System.out.println("Hide button clicked");
+	}
+
+	class RemoveHandler implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent event) {
+			RemoveButtonAction();
+		}
+	}
+
+	public void RemoveButtonAction() {
+		System.out.println("Remove button clicked");
+	}
+
+	class NoneButtonHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
 			NoneButtonAction();
 		}
 	}
-
 	public void NoneButtonAction() {
-		System.out.println("Hide Category clicked");
+		System.out.println("Hide category button clicked");
 	}
+
 
 
 	

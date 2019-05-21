@@ -72,26 +72,26 @@ public class Place extends Polygon {
 //        this.description = show;
 //    }
 	
-//	protected void paintComponent(GraphicsContext Triangle) {
-//        super.paintComponent(Triangle);
-//
-//        if (category.equals("Bus")) {
-//        	Triangle.setFill(Color.RED);
-//        } else if (category.equals("Underground")) {
-//        	Triangle.setFill(Color.BLUE);
-//        } else if (category.equals("Train")) {
-//        	Triangle.setFill(Color.GREEN);
-//        } else if (category.equals("None")) {
-//        	Triangle.setFill(Color.BLACK);
-//        }
-//        if (selected) {
-//            System.out.println("Going to selected...");
-//
-//            requestFocus();
-//            Triangle.setFill(Color.YELLOW);
-//        }
-//
-//        g.fillPolygon(xPoint, yPoint, 3);
-//
-//    }
+	protected void paintComponent(GraphicsContext Triangle) {
+        super.paintComponent(Triangle);
+
+        if (category.equals("Bus")) {
+        	Triangle.setFill(Color.RED);
+        } else if (category.equals("Underground")) {
+        	Triangle.setFill(Color.BLUE);
+        } else if (category.equals("Train")) {
+        	Triangle.setFill(Color.GREEN);
+        } else if (category.equals("None")) {
+        	Triangle.setFill(Color.BLACK);
+        }
+        if (selected) {
+            System.out.println("Going to selected...");
+
+            requestFocus();
+            Triangle.setFill(Color.YELLOW);
+        }
+
+        g.fillPolygon(xPoint, yPoint, 3);
+
+    }
 }
