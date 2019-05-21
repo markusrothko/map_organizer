@@ -78,7 +78,8 @@ public class MapSystem extends Application {
 		noneButton.setAlignment(Pos.CENTER);
 		listan.getChildren().add(noneButton);
 		listan.setPrefSize(200, 200);
-		// noneButton.setOnAction(new NoneHandler());
+		noneButton.setOnAction(new NoneHandler());
+
 
 
 
@@ -476,6 +477,8 @@ public class MapSystem extends Application {
 
 		}
 	}
+
+
 	
 //	private void populate() {
 //		placeList.put(K, V)(new Place("Helenelund", "Train", false, true, 40, 60));
