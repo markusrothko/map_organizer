@@ -265,6 +265,7 @@ public class MapSystem extends Application {
 		public void handle(MouseEvent event) {
 			double x = event.getX();
 			double y = event.getY();
+			//new NewNamePlace();
 		//	System.out.println(x + " " + y);
 /*			if (group.getSelectedToggle() == null)
 			{
@@ -291,19 +292,20 @@ public class MapSystem extends Application {
 			if ((group.getSelectedToggle().toString().contains("Described")) && undergroundSelected) {
 				System.out.println("Described funkar tillsammans med underground");
 			}
-			if ((group.getSelectedToggle().toString().contains("Described")) && busSelected) {
+			else if ((group.getSelectedToggle().toString().contains("Described")) && busSelected) {
 				System.out.println("Described funkar tillsammans med buss");
 			}
-			if ((group.getSelectedToggle().toString().contains("Described")) && trainSelected) {
+			else if ((group.getSelectedToggle().toString().contains("Described")) && trainSelected) {
 				System.out.println("Described funkar tillsammans med tåg");
 			}
-			if ((group.getSelectedToggle().toString().contains("Named")) && undergroundSelected) {
+			else if ((group.getSelectedToggle().toString().contains("Named")) && undergroundSelected) {
 				System.out.println("Named funkar tillsammans med underground");
+				
 			}
-			if ((group.getSelectedToggle().toString().contains("Named")) && busSelected) {
+			else if ((group.getSelectedToggle().toString().contains("Named")) && busSelected) {
 				System.out.println("Named funkar tillsammans med buss");
 			}
-			if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
+			else if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
 				System.out.println("Named funkar tillsammans med tåg");
 			}
 
@@ -432,9 +434,10 @@ public class MapSystem extends Application {
 	
 	class NewNamePlace implements EventHandler<ActionEvent> {
 		String name;
-
+		
 		public void handle(ActionEvent event) {
 			try {
+				System.out.println("test");
 				NamedPlaceHandler dialog = new NamedPlaceHandler();
 				Optional<ButtonType> result = dialog.showAndWait();
 				

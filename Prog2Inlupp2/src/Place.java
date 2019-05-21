@@ -18,7 +18,9 @@ public class Place extends Polygon {
 	protected static final int[] xPoint = {20, 10, 0};
     protected static final int[] yPoint = {0, 20, 0};
 	
-	//Lägg till i konstruktorn senare:  Position p
+	
+    
+    //Lägg till i konstruktorn senare:  Position p
 	public Place(String name, String category, boolean selected, boolean hidden, Position p) {
 		this.name = name;
 		this.category = category;
