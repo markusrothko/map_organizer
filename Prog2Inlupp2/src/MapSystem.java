@@ -297,6 +297,15 @@ public class MapSystem extends Application {
 			if ((group.getSelectedToggle().toString().contains("Described")) && trainSelected) {
 				System.out.println("Described funkar tillsammans med tåg");
 			}
+			if ((group.getSelectedToggle().toString().contains("Named")) && undergroundSelected) {
+				System.out.println("Named funkar tillsammans med underground");
+			}
+			if ((group.getSelectedToggle().toString().contains("Named")) && busSelected) {
+				System.out.println("Named funkar tillsammans med buss");
+			}
+			if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
+				System.out.println("Named funkar tillsammans med tåg");
+			}
 
 			//uppdaterings test
 			//Kolla radiobutton 
