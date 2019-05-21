@@ -266,16 +266,15 @@ public class MapSystem extends Application {
 			double x = event.getX();
 			double y = event.getY();
 			//new NewNamePlace();
-			String answer;
-			 TextInputDialog dialog = new TextInputDialog("");
-			 dialog.setTitle("Text Input Dialog");
-			 
-			 dialog.setContentText("Please the name of the place");
-			 Optional<String> result = dialog.showAndWait();
-			 if (result.isPresent()){
-			     System.out.println("Your name: " + result.get());
-			 }
-           
+			
+			TextInputDialog dialog = new TextInputDialog("");
+			dialog.setTitle("Text Input Dialog");
+
+			dialog.setContentText("Please the name of the place");
+			Optional<String> result = dialog.showAndWait();
+			if (result.isPresent()) {
+				System.out.println("Your name: " + result.get());
+			}
                
 		//	System.out.println(x + " " + y);
 /*			if (group.getSelectedToggle() == null)
