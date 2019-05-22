@@ -45,11 +45,6 @@ public class MapSystem extends Application {
 	List<Place> places = new ArrayList<>();
 	// Hashmap för att söka genom namn
 	HashMap<String, List<Place>> nameList = new HashMap<>();
-	
-	
-    Collection<Place> markedPlacesHashMap = new ArrayList<>();
-    List<Place> placeByCategory = new ArrayList<>();
-    HashMap<String, List<Place>> categoryMap = new HashMap<>();
 
 	// private Image image = new Image("file:C:/Users/Ingela/Desktop/Programmering
 	// 2/inlämingsuppgift 2/jarvafaltet.png");
@@ -67,15 +62,16 @@ public class MapSystem extends Application {
 	private boolean undergroundSelected = false;
 	private boolean busSelected = false;
 	private boolean trainSelected = false;
-	
-	private String category;
-	private String result;
-	
+	BorderPane root = new BorderPane();
+	Button newButton = new Button("New");
+	private ClickHandler clickHandler = new ClickHandler();
+
+
 
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
-		BorderPane root = new BorderPane();
+	//	BorderPane root = new BorderPane();
 		Label right = new Label("Right");
 
 		VBox listan = new VBox();
@@ -124,7 +120,7 @@ public class MapSystem extends Application {
 		vbox.getChildren().add(hboxTop);
 		hboxTop.setPadding(new Insets(15));
 		hboxTop.setAlignment(Pos.CENTER);
-		Button newButton = new Button("New");
+		// Button newButton = new Button("New");
 		newButton.setOnAction(new newButtonHandler());
 
 		VBox vbs = new VBox(10);
@@ -184,8 +180,6 @@ public class MapSystem extends Application {
 		primaryStage.setTitle("Map System");
 		primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new ExitHandler());
 		primaryStage.show();
-		
-		
 	}
 
 	class ExitHandler implements EventHandler<WindowEvent> {
@@ -246,7 +240,30 @@ public class MapSystem extends Application {
 		
 		}
 	}
-	
+
+
+
+	class newButtonHandler implements EventHandler<ActionEvent>{
+		@Override public void handle(ActionEvent event) {
+			root.addEventHandler(MouseEvent.MOUSE_CLICKED, clickHandler);
+			root.setCursor(Cursor.CROSSHAIR);
+			newButton.setDisable(true);
+		}
+	}
+
+	class ClickHandler implements EventHandler<MouseEvent>{
+		@Override public void handle(MouseEvent event) {
+			double x = event.getX();
+			double y = event.getY();
+			PostItLapp lapp = new PostItLapp(x,y);
+			root.getChildren().add(lapp);
+			root.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickHandler);
+			root.setCursor(Cursor.DEFAULT);
+			newButton.setDisable(false);
+		}
+	}
+
+	/*
 	public class newButtonHandler implements EventHandler<ActionEvent> {
 		boolean new_is_pressed = false;
 		public void handle(ActionEvent event) {
@@ -258,7 +275,7 @@ public class MapSystem extends Application {
 			
 		
 			
-			
+			*/
 			
 //			while (new_is_pressed) {
 //				handleMouseClickAction(null);
@@ -270,9 +287,8 @@ public class MapSystem extends Application {
 			//Kolla kategoring och radiobutton
 			//Startar Named eller Described placehandler beroende på radiobuttons
 			//Objectet skapas i dialogen eller här.
-		}
-		
-	}
+
+
 	
 	class NewPlace implements EventHandler<MouseEvent> {
 
@@ -280,19 +296,16 @@ public class MapSystem extends Application {
 		public void handle(MouseEvent event) {
 			double x = event.getX();
 			double y = event.getY();
-			
 			//new NewNamePlace();
 			//hejsan
 			TextInputDialog dialog = new TextInputDialog("");
 			dialog.setTitle("Text Input Dialog");
 
-			dialog.setContentText("Please enter the name of the place");
+			dialog.setContentText("Please the name of the place");
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent()) {
-				System.out.println("Place name: " + result.get());
-				//result=result.get();
+				System.out.println("Your name: " + result.get());
 			}
-			
                
 		//	System.out.println(x + " " + y);
 /*			if (group.getSelectedToggle() == null)
@@ -319,27 +332,22 @@ public class MapSystem extends Application {
 			}*/
 			if ((group.getSelectedToggle().toString().contains("Described")) && undergroundSelected) {
 				System.out.println("Described funkar tillsammans med underground");
-				category = "underground";
 			}
 			else if ((group.getSelectedToggle().toString().contains("Described")) && busSelected) {
 				System.out.println("Described funkar tillsammans med buss");
-				category = "bus";
 			}
 			else if ((group.getSelectedToggle().toString().contains("Described")) && trainSelected) {
 				System.out.println("Described funkar tillsammans med tåg");
-				category = "train";
 			}
 			else if ((group.getSelectedToggle().toString().contains("Named")) && undergroundSelected) {
 				System.out.println("Named funkar tillsammans med underground");
-				category = "underground";
+				
 			}
 			else if ((group.getSelectedToggle().toString().contains("Named")) && busSelected) {
 				System.out.println("Named funkar tillsammans med buss");
-				category = "bus";
 			}
 			else if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
 				System.out.println("Named funkar tillsammans med tåg");
-				category = "train";
 			}
 			else {
 				System.out.println("Inget");
@@ -352,21 +360,6 @@ public class MapSystem extends Application {
 			//Avsluta new place function
 		}
 
-	}
-	
-	private void CreateNamedPlace() {
-		NamedPlace namedPlace = new NamedPlace("DSV", category, false, false, null);
-		
-		//display.add(namedPlace);
-		
-		
-	}
-	
-	private void CreateDescribedPlace() {
-		
-		
-		
-		
 	}
 
 	
@@ -517,35 +510,13 @@ public class MapSystem extends Application {
 
 	class SearchHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
-			try {
-				SearchHandler dialog = new SearchHandler();
-				
-//				Optional<ButtonType> result = dialog.showAndWait();
-//				if (result.isPresent() && result.get() == ButtonType.OK) {
-//					//if (name.trim().isEmpty()) {
-//						//Alert msg = new Alert(AlertType.ERROR, "Empty name!");
-//						//msg.showAndWait();
-//					}
-//                
-			} catch (NumberFormatException e)
-
-			{
-				Alert msg = new Alert(AlertType.ERROR);
-				msg.setContentText("Error, incorrect input!");
-				msg.showAndWait();
-			} catch (NullPointerException e)
-
-			{
-				Alert msg = new Alert(AlertType.ERROR);
-				msg.setContentText("Error, enter all fields please");
-				msg.showAndWait();
-			}
+			SearchButtonAction();
 		}
 	}
 
-//	public void SearchButtonAction() {
-//		System.out.println("Search button clicked");
-//	}
+	public void SearchButtonAction() {
+		System.out.println("Search button clicked");
+	}
 
 	class HideHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {

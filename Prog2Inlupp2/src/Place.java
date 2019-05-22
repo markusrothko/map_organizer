@@ -4,24 +4,23 @@ import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.canvas.*;
 
-public class Place extends Triangle {
-//	super position.getX();
-//	super position.getY();
+public class Place extends Polygon {
+	//super position.getX();
+	//super position.getY();
 	private String name;
 	private String category;
 	private boolean selected = false;
 	private boolean hidden = false;
 	protected Position p;
-
 	//private double xcoord;
 	//private double ycoord;
 	
-	//protected static final int[] xPoint = {20, 10, 0};
-    //protected static final int[] yPoint = {0, 20, 0};
+	protected static final int[] xPoint = {20, 10, 0};
+    protected static final int[] yPoint = {0, 20, 0};
 	
 	
     
-    
+    //Lägg till i konstruktorn senare:  Position p
 	public Place(String name, String category, boolean selected, boolean hidden, Position p) {
 		this.name = name;
 		this.category = category;
@@ -73,26 +72,26 @@ public class Place extends Triangle {
 //        this.description = show;
 //    }
 	
-//	protected void paintComponent(GraphicsContext Triangle) {
-//        super(Triangle);
-//
-//        if (category.equals("Bus")) {
-//        	Triangle.setFill(Color.RED);
-//        } else if (category.equals("Underground")) {
-//        	Triangle.setFill(Color.BLUE);
-//        } else if (category.equals("Train")) {
-//        	Triangle.setFill(Color.GREEN);
-//        } else if (category.equals("None")) {
-//        	Triangle.setFill(Color.BLACK);
-//        }
-//        if (selected) {
-//            System.out.println("Going to selected...");
-//
-//            requestFocus();
-//            Triangle.setFill(Color.YELLOW);
-//        }
-//
-//        g.fillPolygon(xPoint, yPoint, 3);
-//
-//    }
+	protected void paintComponent(GraphicsContext Triangle) {
+        super.paintComponent(Triangle);
+
+        if (category.equals("Bus")) {
+        	Triangle.setFill(Color.RED);
+        } else if (category.equals("Underground")) {
+        	Triangle.setFill(Color.BLUE);
+        } else if (category.equals("Train")) {
+        	Triangle.setFill(Color.GREEN);
+        } else if (category.equals("None")) {
+        	Triangle.setFill(Color.BLACK);
+        }
+        if (selected) {
+            System.out.println("Going to selected...");
+
+            requestFocus();
+            Triangle.setFill(Color.YELLOW);
+        }
+
+        g.fillPolygon(xPoint, yPoint, 3);
+
+    }
 }
