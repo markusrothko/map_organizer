@@ -47,6 +47,7 @@ public class PostItLapp extends BorderPane {
             balk.requestFocus();
             startX = event.getX();
             startY = event.getY();
+
         }
     }
 }

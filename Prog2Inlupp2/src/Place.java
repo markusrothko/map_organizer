@@ -1,34 +1,32 @@
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.canvas.*;
 
 public class Place extends Polygon {
-	//super position.getX();
-	//super position.getY();
 	private String name;
 	private String category;
 	private boolean selected = false;
 	private boolean hidden = false;
 	protected Position p;
-	//private double xcoord;
-	//private double ycoord;
+
+
+	private TextArea textArea = new TextArea();
+	private Pane balk = new Pane();
 	
-	protected static final int[] xPoint = {20, 10, 0};
-    protected static final int[] yPoint = {0, 20, 0};
-	
-	
-    
     //Lägg till i konstruktorn senare:  Position p
 	public Place(String name, String category, boolean selected, boolean hidden, Position p) {
+		super (p.getXCoordinate(), p.getYCoordinate(), p.getXCoordinate()-15, p.getYCoordinate()-30,
+		p.getXCoordinate()+15, p.getXCoordinate()-30);
 		this.name = name;
 		this.category = category;
 		this.selected = selected;
 		this.hidden = hidden;
 		this.p = p;
-		//this.ycoord = ycoord;
-		//this.xcoord = xcoord;
+
 		
 		//setBounds(p.getXCoordinate() - 10, p.getYCoordinate() - 10, 20, 20);
         //setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

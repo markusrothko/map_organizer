@@ -46,9 +46,16 @@ public class MapSystem extends Application {
 	// Hashmap för att söka genom namn
 	HashMap<String, List<Place>> nameList = new HashMap<>();
 
-	// private Image image = new Image("file:C:/Users/Ingela/Desktop/Programmering
-	// 2/inlämingsuppgift 2/jarvafaltet.png");
-	// private ImageView imageView = new ImageView(image);
+	//datastuktur för alla markerade platser
+	ArrayList<Place> markedPlaces = new ArrayList<>();
+
+	//datastruktur för alla underground
+	ArrayList<Place> allUnderground = new ArrayList<>();
+	//datastruktur för alla train
+	ArrayList<Place> allTrain = new ArrayList<>();
+	//datastruktur för alla bus
+	ArrayList<Place> allBus = new ArrayList<>();
+
 
 	ObservableList<String> categories = FXCollections.observableArrayList("Underground", "Bus", "Train");
 	ListView<String> cat = new ListView<>(categories);
@@ -540,7 +547,7 @@ public class MapSystem extends Application {
 
 	public void HideButtonAction() {
 		System.out.println("Hide button clicked");
-		// tar alla platser som är markerade i datastrukturen som innehåller markerade platser
+		// tar alla platser i datastrukturen markedPlaces -- den innehåller markerade platser
 		// gör dem osynliga
 
 	}
@@ -554,8 +561,9 @@ public class MapSystem extends Application {
 
 	public void RemoveButtonAction() {
 		System.out.println("Remove button clicked");
-		// tar alla markerade platser
-		// tar bort dem ur samtliga datastrukturer (som mest: den markerade datastrukturen plus positionList och nameList.)
+		// tar alla platser i datastrukturen markedPlaces -- den innehåller markerade platser
+		// tar bort dem från samtliga datastrukturer
+
 	}
 
 	class HideCategoryButtonHandler implements EventHandler<ActionEvent> {
@@ -565,21 +573,23 @@ public class MapSystem extends Application {
 	}
 	public void HideCategoryButtonAction() {
 		System.out.println("Hide category button clicked");
-		// kollar vilken kategori som är vald
-		// gör alla av den kategoriNNNN markerade
-		// göm alla markerade
+		// kollar vilken kategori som är vald, vilket ger en sträng
+		// en if-sats som kollar strängen, som itererar genom arraylisten för den specifika kategorin
+		// gör dem osynliga, genom att setVisible = false
 	}
 
-//	class ShowCategoryHandler implements EventHandler<MouseEvent> {
-//		public void handle(ActionEvent event) {
-//			ShowCategoryAction();
-//		}
-//	}
-//	public void ShowCategoryAction() {
-//		System.out.println("Hide category button clicked");
-//		//
-//
-//		}
+	class ShowCategoryHandler implements EventHandler<MouseEvent> {
+		public void handle(ActionEvent event) {
+			ShowCategoryAction();
+		}
+	}
+	public void ShowCategoryAction() {
+		System.out.println("Hide category button clicked");
+	// kollar vilken kategori som är vald, vilket ger en sträng
+	// en if-sats som kollar strängen, som itererar genom arraylisten för den specifika kategorin
+	// gör dem osynliga, genom att setVisible = true
+
+		}
 
 
 
