@@ -12,8 +12,7 @@ import javafx.scene.layout.GridPane;
 public class CoordinateHandler extends Alert {
 	private TextField xField = new TextField();
 	private TextField yField = new TextField();
-	//Fixa senare: titel
-	//dialog.setTitle("Input coordinates:");
+
 	public CoordinateHandler() {
 		super(AlertType.CONFIRMATION);
 		

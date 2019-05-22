@@ -73,7 +73,7 @@ public class Place extends Polygon {
 //    }
 	
 	protected void paintComponent(GraphicsContext Triangle) {
-        super.paintComponent(Triangle);
+   //     super.paintComponent(Triangle);
 
         if (category.equals("Bus")) {
         	Triangle.setFill(Color.RED);
@@ -91,7 +91,7 @@ public class Place extends Polygon {
             Triangle.setFill(Color.YELLOW);
         }
 
-        g.fillPolygon(xPoint, yPoint, 3);
+  //      g.fillPolygon(xPoint, yPoint, 3);
 
     }
 }

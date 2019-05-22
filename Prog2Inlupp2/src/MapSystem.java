@@ -79,11 +79,11 @@ public class MapSystem extends Application {
 		listan.getChildren().add(new Label("Categories"));
 		listan.getChildren().add(cat);
 		cat.getSelectionModel().selectedItemProperty().addListener(new ListHandler());
-		Button noneButton = new Button("Hide Category");
-		noneButton.setAlignment(Pos.CENTER);
-		listan.getChildren().add(noneButton);
+		Button hideCategoryButton = new Button("Hide Category");
+		hideCategoryButton.setAlignment(Pos.CENTER);
+		listan.getChildren().add(hideCategoryButton);
 		listan.setPrefSize(200, 200);
-		noneButton.setOnAction(new NoneButtonHandler());
+		hideCategoryButton.setOnAction(new HideCategoryButtonHandler());
 
 
 
@@ -348,6 +348,7 @@ public class MapSystem extends Application {
 			}
 			else if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
 				System.out.println("Named funkar tillsammans med tåg");
+
 			}
 			else {
 				System.out.println("Inget");
@@ -459,6 +460,13 @@ public class MapSystem extends Application {
 					}
                 double x = dialog.getXCoordinate();
 				double y = dialog.getYCoordinate();
+				// jämför de mottagna koordinaterna med de koordinater som finns i positionlist
+				// om den inte hittar en plats ska det komma ett felmeddelande
+				// gör alla (evenutella) markerade platser omarkerade
+				// om dem mottagna koord hittar en plats ska den platsen bli markerad
+				// och om den platsen är osynlig så ska den bli synlig
+
+
 			} catch (NumberFormatException e)
 
 			{
@@ -516,6 +524,12 @@ public class MapSystem extends Application {
 
 	public void SearchButtonAction() {
 		System.out.println("Search button clicked");
+		// avmarkera platser som evt är markerade
+		// hämtar det som är i sökfältet
+		// jämför den textsträngen med nyckeln i den datastrukturen som innehåller alla platser (kategorier spelar ingen roll här)
+		// om den hittar en eller flera matches, ska de göras:
+		// först synliga
+		// sedan markerade
 	}
 
 	class HideHandler implements EventHandler<ActionEvent> {
@@ -526,30 +540,52 @@ public class MapSystem extends Application {
 
 	public void HideButtonAction() {
 		System.out.println("Hide button clicked");
+		// tar alla platser som är markerade i datastrukturen som innehåller markerade platser
+		// gör dem osynliga
+
 	}
 
 	class RemoveHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
 			RemoveButtonAction();
+
 		}
 	}
 
 	public void RemoveButtonAction() {
 		System.out.println("Remove button clicked");
+		// tar alla markerade platser
+		// tar bort dem ur samtliga datastrukturer (som mest: den markerade datastrukturen plus positionList och nameList.)
 	}
 
-	class NoneButtonHandler implements EventHandler<ActionEvent> {
+	class HideCategoryButtonHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
-			NoneButtonAction();
+			HideCategoryButtonAction();
 		}
 	}
-	public void NoneButtonAction() {
+	public void HideCategoryButtonAction() {
 		System.out.println("Hide category button clicked");
+		// kollar vilken kategori som är vald
+		// gör alla av den kategoriNNNN markerade
+		// göm alla markerade
 	}
 
+//	class ShowCategoryHandler implements EventHandler<MouseEvent> {
+//		public void handle(ActionEvent event) {
+//			ShowCategoryAction();
+//		}
+//	}
+//	public void ShowCategoryAction() {
+//		System.out.println("Hide category button clicked");
+//		//
+//
+//		}
 
 
-	
+
+
+
+
 //	private void populate() {
 //		placeList.put(K, V)(new Place("Helenelund", "Train", false, true, 40, 60));
 //	}
