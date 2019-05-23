@@ -241,8 +241,10 @@ public class MapSystem extends Application {
         public void handle(MouseEvent event) {
             double x = event.getX();
             double y = event.getY();
-            PostItLapp lapp = new PostItLapp(x, y);
-            root.getChildren().add(lapp);
+            
+            //PostItLapp lapp = new PostItLapp(x, y);
+            NamedPlace p = new NamedPlace(null, null, x, y);
+            root.getChildren().add(p);
             root.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickHandler);
             root.setCursor(Cursor.DEFAULT);
             newButton.setDisable(false);
@@ -274,8 +276,8 @@ public class MapSystem extends Application {
 
         @Override
         public void handle(MouseEvent event) {
-            double x = event.getX();
-            double y = event.getY();
+//            double x = event.getX();
+//            double y = event.getY();
             //new NewNamePlace();
             TextInputDialog dialog = new TextInputDialog("");
             dialog.setTitle("Text Input Dialog");
@@ -410,38 +412,36 @@ public class MapSystem extends Application {
 
     // COORDINATE SEARCH
 
-    class CoordinateSearch implements EventHandler<ActionEvent> {
-        public void handle(ActionEvent event) {
-            try {
-                CoordinateHandler dialog = new CoordinateHandler();
-                dialog.setTitle("Input coordinates:");
-                Optional<ButtonType> result = dialog.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    //if (name.trim().isEmpty()) {
-                    //Alert msg = new Alert(AlertType.ERROR, "Empty name!");
-                    //msg.showAndWait();
-                }
-                double x = dialog.getXCoordinate();
-                double y = dialog.getYCoordinate();
-                // jämför de mottagna koordinaterna med de koordinater som finns i positionlist
-                // om den inte hittar en plats ska det komma ett felmeddelande
-                // gör alla (evenutella) markerade platser omarkerade
-                // om dem mottagna koord hittar en plats ska den platsen bli markerad
-                // och om den platsen är osynlig så ska den bli synlig
+	class CoordinateSearch implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent event) {
+			CoordinateHandler dialog = new CoordinateHandler();
+			dialog.setTitle("Input coordinates:");
+			Optional<ButtonType> result = dialog.showAndWait();
+			if (result.isPresent() && result.get() == ButtonType.OK) {
+				if (Double.parseDouble(dialog.getXCord()) >= 0 && Double.parseDouble(dialog.getYCord()) >= 0) {
+					if (positionList.containsKey(new Position(Double.parseDouble(dialog.getXCord()),
+							Double.parseDouble(dialog.getYCord())))) {
+						//unmarkAll();
+						Place p = positionList.get(new Position(Double.parseDouble(dialog.getXCord()),
+								Double.parseDouble(dialog.getYCord())));
+						//p.setMarkedProperty(true);
+						p.setVisible(true);
+					} //else?
+						//noPlaceError();
+				} //else?
+					//negativeNumError();
+			}
+//			double x = dialog.getXCord();
+//			double y = dialog.getYCoordinate();
+			// jämför de mottagna koordinaterna med de koordinater som finns i positionlist
+			// om den inte hittar en plats ska det komma ett felmeddelande
+			// gör alla (evenutella) markerade platser omarkerade
+			// om dem mottagna koord hittar en plats ska den platsen bli markerad
+			// och om den platsen är osynlig så ska den bli synlig
 
+		}
 
-            } catch (NumberFormatException e) {
-                Alert msg = new Alert(AlertType.ERROR);
-                msg.setContentText("Error, incorrect input!");
-                msg.showAndWait();
-            } catch (NullPointerException e) {
-                Alert msg = new Alert(AlertType.ERROR);
-                msg.setContentText("Error, enter all fields please");
-                msg.showAndWait();
-            }
-        }
-
-    }
+	}
 
 
                // NEW NAME PLACE

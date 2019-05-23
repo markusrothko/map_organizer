@@ -1,19 +1,31 @@
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class DescribedPlace extends Place {
 
-	private String description;
+	private String description = "null", toString;
 	
-	public DescribedPlace(String name, String category, boolean selected, boolean hidden, Position p, String description) {
-		super(name, category, selected, hidden, p);
-		this.description = description;
+	public DescribedPlace(String name, String category, double x, double y) {
+		super(name, category, x, y);
+		if (!description.equals(""))
+			this.description = description;
+		toString = "Described," + category + "," + (int) x + "," + (int) y + "," + super.name + "," + this.description;
 	}
 	
-	public String getDescription () {
-		return description;
+//	public String getDescription () {
+//		return description;
+//	}
+	
+	@Override
+	public void showPlaceDescription() {
+		Alert alert = new Alert(AlertType.INFORMATION, description);
+		alert.setHeaderText(name + " [ x" + posi.getXCoordinate() + " / y" + posi.getYCoordinate() + " ]");
+		//alert.setTitle(category);
+		alert.showAndWait();
 	}
 	
 	@Override
-    public String toString() {
-        return "Described place," + getCategory() + "," + p.getXCoordinate() + "," + p.getYCoordinate() + "," + getName() + "," + description;
-    }
+	public String toString() {
+		return toString;
+	}
 }

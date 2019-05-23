@@ -1,31 +1,27 @@
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
+
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import javafx.scene.*;
-import javafx.scene.paint.*;
-import javafx.scene.canvas.*;
-
-public class Place extends Polygon {
-	private String name;
-	private String category;
-	private boolean selected = false;
-	private boolean hidden = false;
-	protected Position p;
 
 
-	private TextArea textArea = new TextArea();
-	private Pane balk = new Pane();
+public abstract class Place extends Polygon {
+	protected String name;
+	protected String category;
+	private final Color color;
+	//private final Color marked;
+	//private boolean selected = false;
 	
-    //Lägg till i konstruktorn senare:  Position p
-	public Place(String name, String category, boolean selected, boolean hidden, Position p) {
-		super (p.getXCoordinate(), p.getYCoordinate(), p.getXCoordinate()-15, p.getYCoordinate()-30,
-		p.getXCoordinate()+15, p.getXCoordinate()-30);
+	protected final Position posi;
+
+	public Place(String name, String category, double x, double y) {
+		
+//		super (p.getXCoordinate(), p.getYCoordinate(), p.getXCoordinate()-15, p.getYCoordinate()-30,
+//		p.getXCoordinate()+15, p.getXCoordinate()-30);
+		
 		this.name = name;
 		this.category = category;
-		this.selected = selected;
-		this.hidden = hidden;
-		this.p = p;
+		//this.selected = selected;
+		
+		posi = new Position(x, y);
 
 		
 		//setBounds(p.getXCoordinate() - 10, p.getYCoordinate() - 10, 20, 20);
@@ -41,55 +37,57 @@ public class Place extends Polygon {
 		return category;
 	}
 	
-	public boolean getselected() {
-		return selected;
+//	public boolean getselected() {
+//		return selected;
+//	}
+	
+//	public void setSelected(boolean select){
+//        this.selected = select;
+//        //selected = true;
+//    }
+
+	
+	switch(category.toUpperCase()) {
+		case "BUS":
+		 	color = Color.DARKRED;
+			//markedColor = Color.RED;
+			setupMarker();
+		break;
+		case "TRAIN":
+			color = Color.GREEN;
+			//markedColor = Color.LIMEGREEN;
+			setupMarker();
+			break;
+		case "UNDERGROUND":
+			color = Color.DEEPSKYBLUE;
+			//markedColor = Color.SKYBLUE;
+			setupMarker();
+			break;
+		default:
+			color = Color.BLACK;
+			//markedColor = Color.DIMGRAY;
+			setupMarker();
+		}
+
+
+	public double getX() {
+		return posi.getXCoordinate();
+	}
+
+	public double getY() {
+		return posi.getYCoordinate();
+	}
+
+	public Position getPos() {
+		return posi;
 	}
 	
-	public void setSelected(boolean select){
-        this.selected = select;
-        //selected = true;
-    }
-	
-	public boolean gethidden() {
-		return hidden;
-	}
-	
-//	public double getxcoord() {
-//		return xcoord;
-//	}
-//	public double getycoord() {
-//		return ycoord;
-//	}
+	abstract void showPlaceDescription();
 	
 	@Override
-    public String toString() {
-        return "Place is " + category + "," + p.getXCoordinate() + "," + p.getYCoordinate() + "," + name;
-    }
+	public abstract String toString();
 	
 //	public void setShowInfo(boolean show) {
 //        this.description = show;
 //    }
-	
-	protected void paintComponent(GraphicsContext Triangle) {
-   //     super.paintComponent(Triangle);
-
-        if (category.equals("Bus")) {
-        	Triangle.setFill(Color.RED);
-        } else if (category.equals("Underground")) {
-        	Triangle.setFill(Color.BLUE);
-        } else if (category.equals("Train")) {
-        	Triangle.setFill(Color.GREEN);
-        } else if (category.equals("None")) {
-        	Triangle.setFill(Color.BLACK);
-        }
-        if (selected) {
-            System.out.println("Going to selected...");
-
-            requestFocus();
-            Triangle.setFill(Color.YELLOW);
-        }
-
-  //      g.fillPolygon(xPoint, yPoint, 3);
-
-    }
 }

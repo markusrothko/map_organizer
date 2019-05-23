@@ -4,12 +4,12 @@ Carl Sunnberg 19990330-3395
 */
 
 import javafx.scene.control.Alert;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class NamedPlaceHandler extends Alert {
+	
 	private TextField nameField = new TextField();
 	
 	public NamedPlaceHandler() {
@@ -23,10 +23,7 @@ public class NamedPlaceHandler extends Alert {
 	
 	// return the name & description
 	public String getName() {
-		String correctedName = nameField.getText();
-		String s1 = correctedName.substring(0, 1).toUpperCase();
-		String nameCapitalized = s1 + correctedName.substring(1);
-		return nameCapitalized;
+		return nameField.getText();
 	}
 
 }

@@ -10,26 +10,27 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class CoordinateHandler extends Alert {
-	private TextField xField = new TextField();
-	private TextField yField = new TextField();
+	
+	private TextField xCordField = new TextField();
+	private TextField yCordField = new TextField();
 
 	public CoordinateHandler() {
 		super(AlertType.CONFIRMATION);
 		
 		GridPane grid = new GridPane();
-		grid.addRow(0, new Label("x:"), xField);
-		grid.addRow(1, new Label("y:"), yField);
+		grid.addRow(0, new Label("x:"), xCordField);
+		grid.addRow(1, new Label("y:"), yCordField);
 		
 		getDialogPane().setContent(grid);
 	}
 	
 	// return the entered x & y coordinate
-	public double getXCoordinate() {
-		return Double.parseDouble(xField.getText());
+	public String getXCord() {
+		return xCordField.getText();
 	}
 	
-	public double getYCoordinate() {
-		return Double.parseDouble(yField.getText());
+	public String getYCord() {
+		return yCordField.getText();
 	}
 
 }
