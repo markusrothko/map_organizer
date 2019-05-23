@@ -64,11 +64,16 @@ public class MapSystem extends Application {
 
 	private boolean changed = false;
 	private ToggleGroup group = new ToggleGroup();
-	private RadioButton namedButton = new RadioButton("Named");
-	private RadioButton describedButton = new RadioButton("Described");
+	//private RadioButton namedButton = new RadioButton("Named");
+	//private RadioButton describedButton = new RadioButton("Described");
+	private RadioButton namedPlace, describedPlace;
+	private MenuBar dropDownMenu;
+	private MenuItem save, exit, loadMapItem, loadPlaces; 
+	
 	private boolean undergroundSelected = false;
 	private boolean busSelected = false;
 	private boolean trainSelected = false;
+	
 	BorderPane root = new BorderPane();
 	Button newButton = new Button("New");
 	private ClickHandler clickHandler = new ClickHandler();
@@ -96,23 +101,23 @@ public class MapSystem extends Application {
 
 
 		VBox vbox = new VBox();
-		MenuBar menuBar = new MenuBar();
-		vbox.getChildren().add(menuBar);
+		dropDownMenu = new MenuBar();
+		vbox.getChildren().add(dropDownMenu);
 
 		Menu archiveMenu = new Menu("File");
-		menuBar.getMenus().add(archiveMenu);
+		dropDownMenu.getMenus().add(archiveMenu);
 
-		MenuItem loadMapItem = new MenuItem("Load Map");
+		loadMapItem = new MenuItem("Load Map");
 		archiveMenu.getItems().add(loadMapItem);
 		loadMapItem.setOnAction(new OpenHandler());
 
-		MenuItem loadPlacesItem = new MenuItem("Load Places");
-		archiveMenu.getItems().add(loadPlacesItem);
-		loadPlacesItem.setOnAction(new OpenHandler());
+		loadPlaces = new MenuItem("Load Places");
+		archiveMenu.getItems().add(loadPlaces);
+		loadPlaces.setOnAction(new OpenHandler());
 
-		MenuItem saveItem = new MenuItem("Save");
-		archiveMenu.getItems().add(saveItem);
-		saveItem.setOnAction(new SaveHandler());
+		save = new MenuItem("Save");
+		archiveMenu.getItems().add(save);
+		save.setOnAction(new SaveHandler());
 
 		// categories.setItems();
 
@@ -131,7 +136,9 @@ public class MapSystem extends Application {
 		newButton.setOnAction(new newButtonHandler());
 
 		VBox vbs = new VBox(10);
-		vbs.getChildren().addAll(namedButton, describedButton);
+		namedPlace = new RadioButton("Named");
+		describedPlace = new RadioButton("Described");
+		vbs.getChildren().addAll(namedPlace, describedPlace);
 		
 		Button searchButton = new Button("Search");
 		searchButton.setOnAction(new SearchHandler());
@@ -147,8 +154,10 @@ public class MapSystem extends Application {
 
 		//Flytta ut radioknapperna utanför start metoden!
 		// har fixat det
-		namedButton.setToggleGroup(group);
-		describedButton.setToggleGroup(group);
+		
+		//Radioknapp gruppen:
+		namedPlace.setToggleGroup(group);
+		describedPlace.setToggleGroup(group);
 
 
 		//tror inte det nedan behövs längre
@@ -578,28 +587,21 @@ public class MapSystem extends Application {
 		// gör dem osynliga, genom att setVisible = false
 	}
 
-	class ShowCategoryHandler implements EventHandler<MouseEvent> {
-		public void handle(ActionEvent event) {
-			ShowCategoryAction();
-		}
-	}
-	public void ShowCategoryAction() {
-		System.out.println("Hide category button clicked");
-	// kollar vilken kategori som är vald, vilket ger en sträng
-	// en if-sats som kollar strängen, som itererar genom arraylisten för den specifika kategorin
-	// gör dem osynliga, genom att setVisible = true
-
-		}
-
-
-
-
-
-
-//	private void populate() {
-//		placeList.put(K, V)(new Place("Helenelund", "Train", false, true, 40, 60));
+//	class ShowCategoryHandler implements EventHandler<MouseEvent> {
+//		public void handle(ActionEvent event) {
+//			ShowCategoryAction();
+//		}
 //	}
-	 
+//
+//	public void ShowCategoryAction() {
+//		System.out.println("Hide category button clicked");
+//		// kollar vilken kategori som är vald, vilket ger en sträng
+//		// en if-sats som kollar strängen, som itererar genom arraylisten för den
+//		// specifika kategorin
+//		// gör dem osynliga, genom att setVisible = true
+//
+//	}
+
 	public static void main(String[] args) {
 		launch(args);
 	}
