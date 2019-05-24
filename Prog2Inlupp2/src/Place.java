@@ -30,22 +30,22 @@ public abstract class Place extends Polygon {
 		switch (category.toUpperCase()) {
 		case "BUS":
 			color = Color.DARKRED;
-			markedColor = Color.RED;
+			markedColor = Color.YELLOW;
 			setupMarker();
 			break;
 		case "TRAIN":
 			color = Color.GREEN;
-			markedColor = Color.LIMEGREEN;
+			markedColor = Color.YELLOW;
 			setupMarker();
 			break;
 		case "UNDERGROUND":
 			color = Color.DEEPSKYBLUE;
-			markedColor = Color.SKYBLUE;
+			markedColor = Color.YELLOW;
 			setupMarker();
 			break;
 		default:
 			color = Color.BLACK;
-			markedColor = Color.DIMGRAY;
+			markedColor = Color.YELLOW;
 			setupMarker();
 		}
 
@@ -54,20 +54,21 @@ public abstract class Place extends Polygon {
 	private void setupMarker() {
 		getPoints().addAll(new Double[] { 0.0, 0.0, -10.0, -20.0, 10.0, -20.0 });
 		setFill(color);
-		relocate(getX() - 10, getY() - 20);
+		//-10, -20
+		relocate(getX(), getY());
 		setMarkedProperty();
 	}
 
 	private void setMarkedProperty() {
 		if (isMarked.getValue()) {
-			relocate(getX() - 10, getY() - 23);
+			relocate(getX() - 15, getY() - 30);
 			setStroke(Color.BLACK);
 			setFill(markedColor);
 			setStrokeWidth(3);
 		} else {
 			setStroke(null);
 			setFill(color);
-			relocate(getX() - 10, getY() - 20);
+			relocate(getX() - 15, getY() - 30);
 		}
 	}
 	
