@@ -17,14 +17,16 @@ public abstract class Place extends Polygon {
 
 //		super (p.getXCoordinate(), p.getYCoordinate(), p.getXCoordinate()-15, p.getYCoordinate()-30,
 //		p.getXCoordinate()+15, p.getXCoordinate()-30);
-		
+        posi = new Position(x, y);
+
 		
 		if (!name.equals(""))
 			this.name = name;
 		else
 			this.name = "null";
+
 		this.category = category;
-		posi = new Position(x, y);
+
 		this.setOnMouseClicked(new MarkerEvent());
 		isMarked.set(true);
 		
@@ -116,8 +118,8 @@ public abstract class Place extends Polygon {
 				showPlaceDescription();
 		}
 	}
-	
-	
+
+
 	
 	
 

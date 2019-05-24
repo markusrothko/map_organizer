@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.*;
+
+import javafx.collections.ObservableSet;
+import javafx.scene.paint.Color;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,16 +40,20 @@ public class MapSystem extends Application {
     private ImageView image;
     private Image map;
     private Pane mapHolder;    
-    List<Place> places = new ArrayList<>();
+    private List<Place> places = new ArrayList<>();
 
     //Hashmap för sökning genom position(x & y)
-    Map<Position, Place> positionList = new HashMap<>();
+    private Map<Position, Place> positionList = new HashMap<>();
     // Hashmap för att söka genom namn
-    TreeMap<String, HashSet<Place>> nameList = new TreeMap<>();
+    private TreeMap<String, HashSet<Place>> nameList = new TreeMap<>();
  // Hashmap för att söka genom kategori
-    TreeMap<String, HashSet<Place>> searchList = new TreeMap<>();
+    private TreeMap<String, HashSet<Place>> searchList = new TreeMap<>();
     //datastuktur för alla markerade platser
-    ArrayList<Place> markedPlaces = new ArrayList<>();
+    //ArrayList<Place> markedPlaces = new ArrayList<>();
+
+    //RENSA SENARE, omskrivning av ovanstående
+    private ObservableSet<Place> markedPlaces = FXCollections.observableSet();
+
     
     
     //datastruktur för alla underground
@@ -141,7 +148,7 @@ public class MapSystem extends Application {
         describedPlace.setToggleGroup(group);
         namedPlace.setSelected((true));
         Button searchButton = new Button("Search");
-        searchButton.setOnAction(new SearchHandler());
+        searchButton.setOnAction(new SearchForPlace());
         Button hideButton = new Button("Hide");
         hideButton.setOnAction(new HideHandler());
         Button removeButton = new Button("Remove");
@@ -534,7 +541,7 @@ public class MapSystem extends Application {
 				NamedPlaceHandler named = new NamedPlaceHandler(x, y);
 				Optional<ButtonType> result = named.showAndWait();
 				if (result.isPresent() && result.get() == ButtonType.OK) {
-					newP = new NamedPlace(getSelectedCategory(), named.getName(), x, y);
+					newP = new NamedPlace(named.getName(), getSelectedCategory(), x, y);
 					storePlace(newP);
 					//hasChanged.set(true);
 				}
@@ -548,7 +555,7 @@ public class MapSystem extends Application {
 				DescribedPlaceHandler described = new DescribedPlaceHandler(x, y);
 				Optional<ButtonType> result = described.showAndWait();
 				if (result.isPresent() && result.get() == ButtonType.OK) {
-					newP = new DescribedPlace(getSelectedCategory(), described.getName(), x, y, described.getDescription());
+					newP = new DescribedPlace(described.getName(), getSelectedCategory(), x, y, described.getDescription());
 					storePlace(newP);
 					//hasChanged.set(true);
 				}
@@ -575,21 +582,40 @@ public class MapSystem extends Application {
 
                 // DIVERSE HANDLERS
 
+    //      VÅR GAMLA SKISS
+//    class SearchHandler implements EventHandler<ActionEvent> {
+//        public void handle(ActionEvent event) {
+//            SearchButtonAction();
+//        }
+//    }
 
-    class SearchHandler implements EventHandler<ActionEvent> {
+//    public void SearchButtonAction() {
+//        System.out.println("Search button clicked");
+//        // avmarkera platser som evt är markerade
+//        // hämtar det som är i sökfältet
+//        // jämför den textsträngen med nyckeln i den datastrukturen som innehåller alla platser (kategorier spelar ingen roll här)
+//        // om den hittar en eller flera matches, ska de göras:
+//        // först synliga
+//        // sedan markerade
+//    }
+
+    class SearchForPlace implements EventHandler<ActionEvent> {
+        HashSet<Place> searchOutput;
+
+        @Override
         public void handle(ActionEvent event) {
-            SearchButtonAction();
+            unmarkAll();
+            if ((searchOutput = nameList.get(wordField.getText())) != null)
+                showResults();
         }
-    }
 
-    public void SearchButtonAction() {
-        System.out.println("Search button clicked");
-        // avmarkera platser som evt är markerade
-        // hämtar det som är i sökfältet
-        // jämför den textsträngen med nyckeln i den datastrukturen som innehåller alla platser (kategorier spelar ingen roll här)
-        // om den hittar en eller flera matches, ska de göras:
-        // först synliga
-        // sedan markerade
+        private void showResults() {
+            for (Place p : searchOutput)
+                if (p.getName().equals(wordField.getText())) {
+                    p.setMarkedProperty(true);
+                    p.setVisible(true);
+                }
+        }
     }
 
     class HideHandler implements EventHandler<ActionEvent> {
@@ -599,7 +625,16 @@ public class MapSystem extends Application {
     }
 
     private void hideButtonAction() {
+        Iterator<Place> iterator = markedPlaces.iterator();
 
+        while (iterator.hasNext()) {
+            Place p = iterator.next();
+            if (p.isMarked()) {
+                p.setVisible(false);
+                iterator.remove();
+                p.setMarkedProperty(false);
+            }
+        }
     }
 
 
@@ -623,12 +658,36 @@ public class MapSystem extends Application {
         }
     }
 
-    public void HideCategoryButtonAction() {
-        System.out.println("Hide category button clicked");
-        // kollar vilken kategori som är vald, vilket ger en sträng
-        // en if-sats som kollar strängen, som itererar genom arraylisten för den specifika kategorin
-        // gör dem osynliga, genom att setVisible = false
+    // VÅR GAMLA
+
+//    public void HideCategoryButtonAction() {
+//        System.out.println("Hide category button clicked");
+//        // kollar vilken kategori som är vald, vilket ger en sträng
+//        // en if-sats som kollar strängen, som itererar genom arraylisten för den specifika kategorin
+//        // gör dem osynliga, genom att setVisible = false
+//    }
+
+
+        public void HideCategoryButtonAction() {
+            for (Place p : searchList.get(getSelectedCategory())) {
+                p.setVisible(false);
+                p.setMarkedProperty(false);
+            }
+        }
+
+        //// FIXA!!!!!!
+
+    private void unmarkAll() {
+        Iterator<Place> iterator = markedPlaces.iterator();
+        while (iterator.hasNext()) {
+            Place p = iterator.next();
+            if (p.isMarked()) {
+                iterator.remove();
+                p.setMarkedProperty(false);
+            }
+        }
     }
+
 
 //	class ShowCategoryHandler implements EventHandler<MouseEvent> {
 //		public void handle(ActionEvent event) {

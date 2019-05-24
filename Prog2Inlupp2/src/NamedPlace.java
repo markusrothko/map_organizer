@@ -6,7 +6,7 @@ public class NamedPlace extends Place {
 	
     public NamedPlace(String name, String category, double x, double y) {
     	super(name, category, x, y);
-    	toString = "Named," + category + "," + (int)x + "," + (int)y +"," + super.name;
+    	toString = "Named," + super.category + "," + (int)x + "," + (int)y +"," + super.name;
     }
 
     @Override
