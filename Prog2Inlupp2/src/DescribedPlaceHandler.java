@@ -13,7 +13,7 @@ public class DescribedPlaceHandler extends Alert {
 	private TextField nameField = new TextField();
 	private TextField descriptionField = new TextField();
 	
-	public DescribedPlaceHandler() {
+	public DescribedPlaceHandler(double x, double y) {
 		super(AlertType.CONFIRMATION);
 		
 		GridPane grid = new GridPane();

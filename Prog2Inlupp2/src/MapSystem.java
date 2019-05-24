@@ -66,7 +66,7 @@ public class MapSystem extends Application {
 //    private boolean undergroundSelected = false;
 //    private boolean busSelected = false;
 //    private boolean trainSelected = false;
-    BorderPane root = new BorderPane();
+    private BorderPane root;
     Button newButton = new Button("New");
     //private ClickHandler clickHandler = new ClickHandler();
     private ObservableList<String> categories;
@@ -81,14 +81,21 @@ public class MapSystem extends Application {
         root = new BorderPane();
         Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Map System");
-        primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new ExitHandler());
+        //primaryStage.setTitle("Map System");
+        //primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new ExitHandler());
         primaryStage.show();
+        image = new ImageView();
+		mapHolder = new Pane();
+		
+		mapHolder.getChildren().add(image);
+        
+        root.setCenter(mapHolder);
+        //((ScrollPane) root.getCenter()).setPadding(new Insets(10));
 
         // TOP SECTION
 
         //  FILE MENU
-
+        //root = new BorderPane();
         VBox vbox = new VBox();
         dropDownMenu = new MenuBar();
         vbox.getChildren().add(dropDownMenu);
@@ -154,13 +161,7 @@ public class MapSystem extends Application {
 	      });*/
         
         //CENTER SECTION
-        image = new ImageView();
-		mapHolder = new Pane();
-		
-		mapHolder.getChildren().add(image);
         
-        root.setCenter(new ScrollPane(mapHolder));
-        ((ScrollPane) root.getCenter()).setPadding(new Insets(10));
        
         // listan.setPadding(new Insets(5));
         // listan.setPrefSize(100, 400);
@@ -171,15 +172,13 @@ public class MapSystem extends Application {
 
         VBox listan = new VBox();
         listan.setPadding(new Insets(5));
-        cat = new ListView<>(categories);
-        categories = FXCollections.observableArrayList("Underground", "Bus", "Train", "None");
-       
-        
-        
+        cat = new ListView<String>();
+        categories = FXCollections.observableArrayList("Bus", "Train", "Underground", "None");
         
         listan.getChildren().add(new Label("Categories"));
         listan.getChildren().add(cat);
 		cat.setItems(categories);
+		
         //cat.getSelectionModel().selectedItemProperty().addListener(new ListHandler());
         listan.setAlignment(Pos.CENTER);
         Button hideCategoryButton = new Button("Hide Category");
@@ -206,7 +205,7 @@ public class MapSystem extends Application {
     }
     private String getSelectedCategory() {
 		// Just in case nothing is selected
-		if (cat.getSelectionModel().getSelectedItem() == null)
+		if (cat.getSelectionModel().getSelectedItem() == null) 
 			return "None";
 		return cat.getSelectionModel().getSelectedItem();
 	}
@@ -535,7 +534,7 @@ public class MapSystem extends Application {
 				NamedPlaceHandler named = new NamedPlaceHandler(x, y);
 				Optional<ButtonType> result = named.showAndWait();
 				if (result.isPresent() && result.get() == ButtonType.OK) {
-					newP = new NamedPlace(cat.getSelectionModel().getSelectedItem(), named.getName(), x, y);
+					newP = new NamedPlace(getSelectedCategory(), named.getName(), x, y);
 					storePlace(newP);
 					//hasChanged.set(true);
 				}
@@ -545,13 +544,12 @@ public class MapSystem extends Application {
 		}
 
 		private void createDescribedPlace(double x, double y) {
-			if (!searchPos.containsKey(new Position(x, y))) {
-				CreateDescribedPlace described = new CreateDescribedPlace(x, y);
-				Optional<ButtonType> anwser = described.showAndWait();
-				if (anwser.isPresent() && anwser.get() == ButtonType.OK) {
-					newPlace = new DescribedPlace(getSelectedCategory(), described.getName(), x, y,
-							described.getDescription());
-					storePlace(newPlace);
+			if (!positionList.containsKey(new Position(x, y))) {
+				DescribedPlaceHandler described = new DescribedPlaceHandler(x, y);
+				Optional<ButtonType> result = described.showAndWait();
+				if (result.isPresent() && result.get() == ButtonType.OK) {
+					newP = new DescribedPlace(getSelectedCategory(), described.getName(), x, y, described.getDescription());
+					storePlace(newP);
 					//hasChanged.set(true);
 				}
 			} else

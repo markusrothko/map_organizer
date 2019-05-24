@@ -6,10 +6,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public abstract class Place extends Polygon {
-	protected String name;
+	protected final String name;
 	protected final String category;
-	private final Color color;
-	private final Color markedColor;
+	private final Color color, markedColor;
 	private SimpleBooleanProperty isMarked = new SimpleBooleanProperty();
 	
 	protected final Position posi;
@@ -18,37 +17,40 @@ public abstract class Place extends Polygon {
 
 //		super (p.getXCoordinate(), p.getYCoordinate(), p.getXCoordinate()-15, p.getYCoordinate()-30,
 //		p.getXCoordinate()+15, p.getXCoordinate()-30);
-
-		this.name = name;
-		posi = new Position(x, y);
-		this.category = category;
 		
+		
+		if (!name.equals(""))
+			this.name = name;
+		else
+			this.name = "null";
+		this.category = category;
+		posi = new Position(x, y);
 		this.setOnMouseClicked(new MarkerEvent());
 		isMarked.set(true);
 		
-
-		switch (category.toUpperCase()) {
-		case "BUS":
+		switch (category) {
+		case "Bus":
 			color = Color.DARKRED;
 			markedColor = Color.YELLOW;
 			setupMarker();
 			break;
-		case "TRAIN":
+		case "Train":
 			color = Color.GREEN;
 			markedColor = Color.YELLOW;
 			setupMarker();
 			break;
-		case "UNDERGROUND":
+		case "Underground":
 			color = Color.DEEPSKYBLUE;
 			markedColor = Color.YELLOW;
 			setupMarker();
 			break;
 		default:
-			color = Color.BLACK;
+			color = Color.WHITE;
 			markedColor = Color.YELLOW;
 			setupMarker();
 		}
 
+		
 	}
 	
 	private void setupMarker() {
@@ -61,14 +63,14 @@ public abstract class Place extends Polygon {
 
 	private void setMarkedProperty() {
 		if (isMarked.getValue()) {
-			relocate(getX() - 15, getY() - 30);
+			relocate(getX() - 10, getY() + 100);
 			setStroke(Color.BLACK);
 			setFill(markedColor);
 			setStrokeWidth(3);
 		} else {
 			setStroke(null);
 			setFill(color);
-			relocate(getX() - 15, getY() - 30);
+			relocate(getX() - 10, getY() + 100);
 		}
 	}
 	
