@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -32,9 +33,10 @@ public class MapSystem extends Application {
 
     private Stage primaryStage;
     private TextField wordField = new TextField();
-    private ImageView display;
-    private Image image;
     
+    private ImageView image;
+    private Image map;
+    private Pane mapHolder;    
     List<Place> places = new ArrayList<>();
 
     //Hashmap för sökning genom position(x & y)
@@ -69,6 +71,7 @@ public class MapSystem extends Application {
     //private ClickHandler clickHandler = new ClickHandler();
     private ObservableList<String> categories;
     private ListView<String> cat;
+    //private Pane display;
     
     
     
@@ -151,8 +154,12 @@ public class MapSystem extends Application {
 	      });*/
         
         //CENTER SECTION
-        display = new ImageView();
-        root.setCenter(new ScrollPane(display));
+        image = new ImageView();
+		mapHolder = new Pane();
+		
+		mapHolder.getChildren().add(image);
+        
+        root.setCenter(new ScrollPane(mapHolder));
         ((ScrollPane) root.getCenter()).setPadding(new Insets(10));
        
         // listan.setPadding(new Insets(5));
@@ -420,8 +427,8 @@ public class MapSystem extends Application {
                 String filnamn = file.getAbsolutePath();
 
                 FileInputStream fis = new FileInputStream(filnamn);
-                image = new Image(new FileInputStream(filnamn));
-                display.setImage(image);
+                map = new Image(new FileInputStream(filnamn));
+                image.setImage(map);
                 // ois.close();
                 fis.close();
 
@@ -506,16 +513,16 @@ public class MapSystem extends Application {
         
         @Override
         public void handle(ActionEvent event) {
-			display.setCursor(Cursor.CROSSHAIR);
+        	mapHolder.setCursor(Cursor.CROSSHAIR);
         	if (namedPlace.isSelected()) {
-        		display.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        		mapHolder.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
 						createNamedPlace(event.getX(), event.getY());
 					}
 				});
 			} else  {
-				display.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				mapHolder.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
 						createDescribedPlace(event.getX(), event.getY());
@@ -553,14 +560,14 @@ public class MapSystem extends Application {
 		}
 
 		private void restoreMouse() {
-			display.setOnMouseClicked(null);
-			display.setCursor(Cursor.DEFAULT);
+			mapHolder.setOnMouseClicked(null);
+			mapHolder.setCursor(Cursor.DEFAULT);
 		}
 
 		private void error(String text) {
 			new Alert(AlertType.ERROR, text).showAndWait();
-			display.setOnMouseClicked(null);
-			display.setCursor(Cursor.DEFAULT);
+			mapHolder.setOnMouseClicked(null);
+			mapHolder.setCursor(Cursor.DEFAULT);
 		}
         
         
