@@ -61,9 +61,9 @@ public class MapSystem extends Application {
     BorderPane root = new BorderPane();
     Button newButton = new Button("New");
     private ClickHandler clickHandler = new ClickHandler();
-    ObservableList<String> categories = FXCollections.observableArrayList("Underground", "Bus", "Train");
-    ListView<String> cat = new ListView<>(categories);
-
+    private ObservableList<String> categories;
+    private ListView<String> cat;
+    
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -108,7 +108,9 @@ public class MapSystem extends Application {
         hboxTop.setPadding(new Insets(15));
         hboxTop.setAlignment(Pos.CENTER);
         // Button newButton = new Button("New");
-        newButton.setOnAction(new newButtonHandler());
+        //newButton.setOnAction(new newButtonHandler());
+        newButton.setOnAction(new NewLocation());
+        
         VBox vbs = new VBox(10);
         namedPlace = new RadioButton("Named");
         describedPlace = new RadioButton("Described");
@@ -141,9 +143,18 @@ public class MapSystem extends Application {
 
         VBox listan = new VBox();
         listan.setPadding(new Insets(5));
+        cat = new ListView<>(categories);
+        categories = FXCollections.observableArrayList("Underground", "Bus", "Train", "None");
+       
+        
+        
+        
         listan.getChildren().add(new Label("Categories"));
         listan.getChildren().add(cat);
+		cat.setItems(categories);
+
         cat.getSelectionModel().selectedItemProperty().addListener(new ListHandler());
+        
         Button hideCategoryButton = new Button("Hide Category");
         hideCategoryButton.setAlignment(Pos.CENTER);
         listan.getChildren().add(hideCategoryButton);
@@ -158,11 +169,16 @@ public class MapSystem extends Application {
         root.setRight(listan);
         // listan.setPadding(new Insets(5));
         // listan.setPrefSize(100, 400);
-        // listan.getSelectionModel().selectedItemProperty().addListener(
-        // new ListHandler());
+//        listan.getSelectionModel().selectedItemProperty().addListener(
+//         new ListHandler());
 
     }
-
+    private String getSelectedCategory() {
+		// Just in case nothing is selected
+		if (cat.getSelectionModel().getSelectedItem() == null)
+			return "None";
+		return cat.getSelectionModel().getSelectedItem();
+	}
                   // EXIT-HANDLER
 
     class ExitHandler implements EventHandler<WindowEvent> {
@@ -239,11 +255,10 @@ public class MapSystem extends Application {
     class ClickHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent event) {
-            double x = event.getX();
-            double y = event.getY();
+            
             
             //PostItLapp lapp = new PostItLapp(x, y);
-            NamedPlace p = new NamedPlace(null, null, x, y);
+            NamedPlace p = new NamedPlace(null, null, event.getX(), event.getY());
             root.getChildren().add(p);
             root.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickHandler);
             root.setCursor(Cursor.DEFAULT);
@@ -279,12 +294,7 @@ public class MapSystem extends Application {
 //            double x = event.getX();
 //            double y = event.getY();
             //new NewNamePlace();
-            TextInputDialog dialog = new TextInputDialog("");
-            dialog.setTitle("Text Input Dialog");
-            dialog.setContentText("Please the name of the place");
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent()) {
-                System.out.println("Your name: " + result.get());
+           
             }
             //	System.out.println(x + " " + y);
 /*			if (group.getSelectedToggle() == null)
@@ -306,27 +316,27 @@ public class MapSystem extends Application {
 				//&& namedButton.isSelected()
 				//System.out.println(group.getSelectedToggle());
 			}*/
-            if ((group.getSelectedToggle().toString().contains("Described")) && undergroundSelected) {
-                System.out.println("Described funkar tillsammans med underground");
-            } else if ((group.getSelectedToggle().toString().contains("Described")) && busSelected) {
-                System.out.println("Described funkar tillsammans med buss");
-            } else if ((group.getSelectedToggle().toString().contains("Described")) && trainSelected) {
-                System.out.println("Described funkar tillsammans med tåg");
-            } else if ((group.getSelectedToggle().toString().contains("Named")) && undergroundSelected) {
-                System.out.println("Named funkar tillsammans med underground");
-            } else if ((group.getSelectedToggle().toString().contains("Named")) && busSelected) {
-                System.out.println("Named funkar tillsammans med buss");
-            } else if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
-                System.out.println("Named funkar tillsammans med tåg");
-            } else {
-                System.out.println("Inget");
-            }
+//            if ((group.getSelectedToggle().toString().contains("Described")) && undergroundSelected) {
+//                System.out.println("Described funkar tillsammans med underground");
+//            } else if ((group.getSelectedToggle().toString().contains("Described")) && busSelected) {
+//                System.out.println("Described funkar tillsammans med buss");
+//            } else if ((group.getSelectedToggle().toString().contains("Described")) && trainSelected) {
+//                System.out.println("Described funkar tillsammans med tåg");
+//            } else if ((group.getSelectedToggle().toString().contains("Named")) && undergroundSelected) {
+//                System.out.println("Named funkar tillsammans med underground");
+//            } else if ((group.getSelectedToggle().toString().contains("Named")) && busSelected) {
+//                System.out.println("Named funkar tillsammans med buss");
+//            } else if ((group.getSelectedToggle().toString().contains("Named")) && trainSelected) {
+//                System.out.println("Named funkar tillsammans med tåg");
+//            } else {
+//                System.out.println("Inget");
+//            }
             //uppdaterings test
             //Kolla radiobutton
             //kolla kategori
             //Skapa plats mha diologruta
             //Avsluta new place function
-        }
+        
     }
     //private void disableNewPlaceCursor() {
     //display.setCursor(Cursor.DefaultCursor);
@@ -446,36 +456,71 @@ public class MapSystem extends Application {
 
                // NEW NAME PLACE
 
-    class NewNamePlace implements EventHandler<ActionEvent> {
-        String name;
-
+    class NewLocation implements EventHandler<ActionEvent> {
+        private Place newP;
+        
+        @Override
         public void handle(ActionEvent event) {
-            try {
-                System.out.println("test");
-                NamedPlaceHandler dialog = new NamedPlaceHandler();
-                Optional<ButtonType> result = dialog.showAndWait();
-
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    if (name.trim().isEmpty()) {
-                        Alert msg = new Alert(AlertType.ERROR, "Empty name!");
-                        msg.showAndWait();
-                    }
-                    name = dialog.getName();
-                    //Objectet skapas:
-                    //Place nplace = new Place(name, Place.getCategory(), changed, null);
-                    //Objectet läggs i hashmap datastruktur:
-                }
-            } catch (NumberFormatException e) {
-                Alert msg = new Alert(AlertType.ERROR);
-                msg.setContentText("Error, incorrect input!");
-                msg.showAndWait();
-            } catch (NullPointerException e) {
-                Alert msg = new Alert(AlertType.ERROR);
-                msg.setContentText("Error, enter all fields please");
-                msg.showAndWait();
-            }
-
+			display.setCursor(Cursor.CROSSHAIR);
+        	if (namedPlace.isSelected()) {
+        		display.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						createNamedPlace(event.getX(), event.getY());
+					}
+				});
+			} else  {
+				display.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						createDescribedPlace(event.getX(), event.getY());
+					}
+				});
+			}
         }
+        private void createNamedPlace(double x, double y) {
+			if (!positionList.containsKey(new Position(x, y))) {
+				NamedPlaceHandler named = new NamedPlaceHandler(x, y);
+				Optional<ButtonType> result = named.showAndWait();
+				if (result.isPresent() && result.get() == ButtonType.OK) {
+					newP = new NamedPlace(cat.getSelectedCategory(), named.getName(), x, y);
+					//storePlace(newP);
+					//hasChanged.set(true);
+				}
+			} else
+				error("Could not create place here!");
+			restoreMouse();
+		}
+
+		private void createDescribedPlace(double x, double y) {
+			if (!searchPos.containsKey(new Position(x, y))) {
+				CreateDescribedPlace described = new CreateDescribedPlace(x, y);
+				Optional<ButtonType> anwser = described.showAndWait();
+				if (anwser.isPresent() && anwser.get() == ButtonType.OK) {
+					newPlace = new DescribedPlace(getSelectedCategory(), described.getName(), x, y,
+							described.getDescription());
+					storePlace(newPlace);
+					//hasChanged.set(true);
+				}
+			} else
+				error("Could not create place here!");
+			restoreMouse();
+		}
+
+		private void restoreMouse() {
+			display.setOnMouseClicked(null);
+			display.setCursor(Cursor.DEFAULT);
+		}
+
+		private void error(String text) {
+			new Alert(AlertType.ERROR, text).showAndWait();
+			display.setOnMouseClicked(null);
+			display.setCursor(Cursor.DEFAULT);
+		}
+        
+        
+        
+        
     }
 
                 // DIVERSE HANDLERS

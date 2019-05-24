@@ -12,7 +12,7 @@ public class NamedPlaceHandler extends Alert {
 	
 	private TextField nameField = new TextField();
 	
-	public NamedPlaceHandler() {
+	public NamedPlaceHandler(double x, double y) {
 		super(AlertType.CONFIRMATION);
 		
 		GridPane grid = new GridPane();

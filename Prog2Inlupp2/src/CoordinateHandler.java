@@ -14,6 +14,7 @@ public class CoordinateHandler extends Alert {
 	private TextField xCordField = new TextField();
 	private TextField yCordField = new TextField();
 
+	
 	public CoordinateHandler() {
 		super(AlertType.CONFIRMATION);
 		
