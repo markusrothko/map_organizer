@@ -584,9 +584,7 @@ public class MapSystem extends Application {
                // NEW NAME PLACE
 
     class NewLocation implements EventHandler<ActionEvent> {
-    	
-        private Place newP;
-        
+        private Place newP;        
         @Override
         public void handle(ActionEvent event) {
         	newButton.setDisable(true);
