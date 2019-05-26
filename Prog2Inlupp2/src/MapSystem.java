@@ -35,7 +35,7 @@ import javafx.stage.WindowEvent;
 public class MapSystem extends Application {
 
     private Stage primaryStage;
-    private TextField wordField = new TextField();
+    private TextField searchField;
     
     private ImageView image;
     private Image map;
@@ -148,6 +148,8 @@ public class MapSystem extends Application {
         describedPlace.setToggleGroup(group);
         namedPlace.setSelected((true));
         Button searchButton = new Button("Search");
+        searchField = new TextField();
+        searchField.setPromptText("Enter search:");
         searchButton.setOnAction(new SearchForPlace());
         Button hideButton = new Button("Hide");
         hideButton.setOnAction(new HideHandler());
@@ -200,8 +202,7 @@ public class MapSystem extends Application {
         
         
         hideCategoryButton.setOnAction(new HideCategoryButtonHandler());
-        hboxTop.getChildren().addAll(newButton, vbs, wordField, searchButton, hideButton, removeButton, coordinatesButton);
-        wordField.setPromptText("Enter search:");
+        hboxTop.getChildren().addAll(newButton, vbs, searchField, searchButton, hideButton, removeButton, coordinatesButton);
         root.setTop(vbox);
         // root.setCenter(imageView);
         // display.setWrapText(true);
@@ -605,13 +606,13 @@ public class MapSystem extends Application {
         @Override
         public void handle(ActionEvent event) {
             unmarkAll();
-            if ((searchOutput = nameList.get(wordField.getText())) != null)
+            if ((searchOutput = nameList.get(searchField.getText())) != null)
                 showResults();
         }
 
         private void showResults() {
             for (Place p : searchOutput)
-                if (p.getName().equals(wordField.getText())) {
+                if (p.getName().equals(searchField.getText())) {
                     p.setMarkedProperty(true);
                     p.setVisible(true);
                 }
