@@ -74,7 +74,7 @@ public class MapSystem extends Application {
 //    private boolean busSelected = false;
 //    private boolean trainSelected = false;
     private BorderPane root;
-    Button newButton = new Button("New");
+    private Button newButton, searchButton;
     //private ClickHandler clickHandler = new ClickHandler();
     private ObservableList<String> categories;
     private ListView<String> cat;
@@ -134,7 +134,7 @@ public class MapSystem extends Application {
         hboxTop.setSpacing(10);
         
         hboxTop.setAlignment(Pos.CENTER);
-        // Button newButton = new Button("New");
+        newButton = new Button("New");
         //newButton.setOnAction(new newButtonHandler());
         newButton.setOnAction(new NewLocation());
         
@@ -147,7 +147,7 @@ public class MapSystem extends Application {
         namedPlace.setToggleGroup(group);
         describedPlace.setToggleGroup(group);
         namedPlace.setSelected((true));
-        Button searchButton = new Button("Search");
+        searchButton = new Button("Search");
         searchField = new TextField();
         searchField.setPromptText("Enter search:");
         searchButton.setOnAction(new SearchForPlace());
@@ -516,10 +516,12 @@ public class MapSystem extends Application {
                // NEW NAME PLACE
 
     class NewLocation implements EventHandler<ActionEvent> {
+    	
         private Place newP;
         
         @Override
         public void handle(ActionEvent event) {
+        	newButton.setDisable(true);
         	mapHolder.setCursor(Cursor.CROSSHAIR);
         	if (namedPlace.isSelected()) {
         		mapHolder.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -548,7 +550,7 @@ public class MapSystem extends Application {
 				}
 			} else
 				error("Could not create place here!");
-			restoreMouse();
+			restoreFunctionality();
 		}
 
 		private void createDescribedPlace(double x, double y) {
@@ -562,10 +564,11 @@ public class MapSystem extends Application {
 				}
 			} else
 				error("Could not create place here!");
-			restoreMouse();
+			restoreFunctionality();
 		}
 
-		private void restoreMouse() {
+		private void restoreFunctionality() {
+			newButton.setDisable(false);
 			mapHolder.setOnMouseClicked(null);
 			mapHolder.setCursor(Cursor.DEFAULT);
 		}
@@ -602,6 +605,7 @@ public class MapSystem extends Application {
 
     class SearchForPlace implements EventHandler<ActionEvent> {
         HashSet<Place> searchOutput;
+        
 
         @Override
         public void handle(ActionEvent event) {
@@ -668,15 +672,15 @@ public class MapSystem extends Application {
 //        // gör dem osynliga, genom att setVisible = false
 //    }
 
+	public void HideCategoryButtonAction() {
+		
+		for (Place p : searchList.get(getSelectedCategory())) {
+			p.setVisible(false);
+			p.setMarkedProperty(false);
+		}
+	}
 
-        public void HideCategoryButtonAction() {
-            for (Place p : searchList.get(getSelectedCategory())) {
-                p.setVisible(false);
-                p.setMarkedProperty(false);
-            }
-        }
-
-        //// FIXA!!!!!!
+	//// FIXA!!!!!!
 
     private void unmarkAll() {
         Iterator<Place> iterator = markedPlaces.iterator();
