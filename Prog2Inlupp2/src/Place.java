@@ -65,14 +65,14 @@ public abstract class Place extends Polygon {
 
 	private void setMarkedProperty() {
 		if (isMarked.getValue()) {
-			relocate(getX() - 10, getY() + 100);
+			relocate(getX() - 10, getY() + 90);
 			setStroke(Color.BLACK);
 			setFill(markedColor);
 			setStrokeWidth(3);
 		} else {
 			setStroke(null);
 			setFill(color);
-			relocate(getX() - 10, getY() + 100);
+			relocate(getX() - 10, getY() + 90);
 		}
 	}
 	
