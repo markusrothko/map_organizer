@@ -1,11 +1,7 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.*;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableSet;
 import javafx.scene.paint.Color;
 import javafx.application.Application;
@@ -79,6 +75,8 @@ public class MapSystem extends Application {
     private ObservableList<String> categories;
     private ListView<String> cat;
     //private Pane display;
+
+    private SimpleBooleanProperty hasChanged = new SimpleBooleanProperty(false);
     
     
     
@@ -88,8 +86,8 @@ public class MapSystem extends Application {
         root = new BorderPane();
         Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
-        //primaryStage.setTitle("Map System");
-        //primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new ExitHandler());
+        primaryStage.setTitle("Map System");
+        primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new ExitApplicationHandler());
         primaryStage.show();
         image = new ImageView();
 		mapHolder = new Pane();
@@ -110,21 +108,17 @@ public class MapSystem extends Application {
         dropDownMenu.getMenus().add(archiveMenu);
         loadMapItem = new MenuItem("Load Map");
         archiveMenu.getItems().add(loadMapItem);
-        loadMapItem.setOnAction(new OpenHandler());
+        loadMapItem.setOnAction(new LoadMapHandler());
         loadPlaces = new MenuItem("Load Places");
         archiveMenu.getItems().add(loadPlaces);
-        loadPlaces.setOnAction(new OpenHandler());
+        loadPlaces.setOnAction(new LoadPlacesHandler());
         saveItem = new MenuItem("Save");
         archiveMenu.getItems().add(saveItem);
-        saveItem.setOnAction(new SaveHandler());
+        saveItem.setOnAction(new SavePlacesHandler());
         exitChoiceItem = new MenuItem("Exit");
         archiveMenu.getItems().add(exitChoiceItem);
+        exitChoiceItem.setOnAction(action -> primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST)));
 
-        //exithandler nedan
-
-        // archiveMenu.getItems().add(exitItem);
-        // exitItem.setOnAction(e -> primaryStage.fireEvent(
-        // new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST)));
 
         // TOP INPUT
 
@@ -238,7 +232,8 @@ public class MapSystem extends Application {
 		//Root kan vara display eller liknande
 		root.getChildren().add(newPlace);
 	}
-                  // EXIT-HANDLER
+/*
+                  // EXIT-HANDLER   (vår gamla)
 
     class ExitHandler implements EventHandler<WindowEvent> {
         public void handle(WindowEvent event) {
@@ -247,6 +242,22 @@ public class MapSystem extends Application {
                 alert.setContentText("Osparat. Avsluta ändå?");
                 Optional<ButtonType> res = alert.showAndWait();
                 if (res.isPresent() && res.get() == ButtonType.CANCEL)
+                    event.consume();
+            }
+        }
+    }
+*/
+
+// exit-handler, väldigt lik! putsa upp
+
+    class ExitApplicationHandler implements EventHandler<WindowEvent> {
+        @Override
+        public void handle(WindowEvent event) {
+            if (hasChanged.get()) {
+                Optional<ButtonType> response = new Alert(AlertType.CONFIRMATION,
+                        "There are unsaved changes.\nQuit?")
+                        .showAndWait();
+                if (response.isPresent() && response.get() == ButtonType.CANCEL || response.get() == ButtonType.CLOSE)
                     event.consume();
             }
         }
@@ -418,10 +429,10 @@ public class MapSystem extends Application {
 //	    System.out.printf("(%f, %f)\n", x, y);
 //	}
 
-            // FILE NAVIGATION
+            // LOAD MAP HANDLER
 
     @SuppressWarnings("unchecked")
-    class OpenHandler implements EventHandler<ActionEvent> {
+    class LoadMapHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             try {
@@ -453,27 +464,84 @@ public class MapSystem extends Application {
         }
     }
 
-    // SAVE HANDLER
 
-    class SaveHandler implements EventHandler<ActionEvent> {
+    // LOAD PLACES HANDLER (direkt kopia)
+
+    class LoadPlacesHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            try {
+            if (unsaved()) {
                 FileChooser fileChooser = new FileChooser();
-                File file = fileChooser.showSaveDialog(primaryStage);
-                if (file == null)
-                    return;
-                String filnamn = file.getAbsolutePath();
+                fileChooser.setInitialDirectory(new File("C:\\Prog2Inlupp2"));
+                fileChooser.setTitle("Choose places file");
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Places files", "*.places"));
+                File choosenFile = fileChooser.showOpenDialog(primaryStage);
 
-                FileOutputStream fos = new FileOutputStream(filnamn);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                //oos.writeObject(uppslag);
-                oos.close();
-                fos.close();
-            } catch (FileNotFoundException fnfe) {
-                System.err.println("Filen går ej att skriva!");
-            } catch (IOException ioe) {
-                System.err.println("Fel har inträffat!");
+                if (choosenFile != null) {
+                    deleteAll();
+                    updateMap();
+                    hasChanged.set(false);
+                    try {
+                        FileReader file = new FileReader(choosenFile);
+                        BufferedReader bufferedFile = new BufferedReader(file);
+                        String line;
+                        try {
+                            while ((line = bufferedFile.readLine()) != null)
+                                createPlace(line.split(","));
+                            unmarkAll();
+                            new Alert(AlertType.INFORMATION, "Places loaded.").showAndWait();
+                        } catch (Exception e) {
+                            new Alert(AlertType.ERROR, "Unknown file format.").showAndWait();
+                        }
+                        file.close();
+                        bufferedFile.close();
+                    } catch (IOException e) {
+                        new Alert(AlertType.ERROR, "Could not open Place file").showAndWait();
+                    }
+                }
+            }
+        }
+
+        // så här ser ett place ut i filen: Named,None,191,218,A mitt i
+        // det är alltså: kategori, x coord, y coord, platsnamn
+        // arg 0 är named eller described (typ)
+        // arg 1 är kategori
+        // arg 2 .... nåt fuffens här
+// testar att justera
+        private void createPlace(String[] arg) {
+            if (arg[0].equals("Named"))
+                storePlace(new NamedPlace(arg[4], arg[1], Double.parseDouble(arg[2]), Double.parseDouble(arg[3])));
+            else if (arg[0].equals("Described"))
+                storePlace(new DescribedPlace(arg[4], arg[1], Double.parseDouble(arg[2]), Double.parseDouble(arg[3]),
+                        arg[5]));
+        }
+
+    }
+
+    // SAVE PLACES HANDLER (direkt kopia)
+
+    class SavePlacesHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(new File("C:\\Prog2Inlupp2"));
+            fileChooser.setTitle("Choose places file");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Places files", "*.places"));
+            File choosenFile = fileChooser.showSaveDialog(primaryStage);
+
+            if (choosenFile != null) {
+                hasChanged.set(false);
+                try {
+                    FileWriter file = new FileWriter(choosenFile);
+                    PrintWriter outBound = new PrintWriter(file);
+                    for (Map.Entry<Position, Place> p : positionList.entrySet())
+                        outBound.println(p.getValue().toString());
+                    file.close();
+                    outBound.close();
+                    new Alert(AlertType.INFORMATION, "Places saved.").showAndWait();
+                } catch (IOException e) {
+                    new Alert(AlertType.ERROR, "Place file could not be saved.").showAndWait();
+                }
             }
         }
     }
@@ -544,7 +612,7 @@ public class MapSystem extends Application {
 				if (result.isPresent() && result.get() == ButtonType.OK) {
 					newP = new NamedPlace(named.getName(), getSelectedCategory(), x, y);
 					storePlace(newP);
-					//hasChanged.set(true);
+					hasChanged.set(true);
 				}
 			} else
 				error("Could not create place here!");
@@ -558,7 +626,7 @@ public class MapSystem extends Application {
 				if (result.isPresent() && result.get() == ButtonType.OK) {
 					newP = new DescribedPlace(described.getName(), getSelectedCategory(), x, y, described.getDescription());
 					storePlace(newP);
-					//hasChanged.set(true);
+					hasChanged.set(true);
 				}
 			} else
 				error("Could not create place here!");
@@ -704,6 +772,40 @@ public class MapSystem extends Application {
 //		// gör dem osynliga, genom att setVisible = true
 //
 //	}
+
+////// UNSAVED METHOD CHANGE.... TYP IDENTISK, ändra allt
+
+    private boolean unsaved() {
+        Optional<ButtonType> response = null;
+        if (hasChanged.get())
+            response = new Alert(AlertType.CONFIRMATION,
+                    "You have unsaved changes.\nThis action will delete your places.").showAndWait();
+        if (!hasChanged.get() || response.isPresent() && response.get() == ButtonType.OK)
+            return true;
+        return false;
+    }
+
+    // REMOVE ALL METHOD, direkt kopia pretty much
+
+    private void deleteAll() {
+
+        markedPlaces.clear();
+        nameList.clear();
+        positionList.clear();
+        searchList.clear();
+    }
+
+
+    // DIREKT KOPIA PRETTY MUCH
+
+
+    private void updateMap() {
+        mapHolder.getChildren().clear();
+        mapHolder.getChildren().add(image);
+        for (Map.Entry<Position, Place> p : positionList.entrySet()) {
+            mapHolder.getChildren().add(p.getValue());
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);
