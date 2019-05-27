@@ -157,16 +157,26 @@ public class MapSystem extends Application {
 
 		// cat.getSelectionModel().selectedItemProperty().addListener(new
 		// ListHandler());
+
 		listan.setAlignment(Pos.CENTER);
 		Button hideCategoryButton = new Button("Hide Category");
 		hideCategoryButton.setAlignment(Pos.CENTER);
 		listan.getChildren().add(hideCategoryButton);
+
+
+
+
 		// listan.setPrefSize(200, 200);
 
 		// OBS ändra storlkep på prefsize
 
 		listan.setPrefSize(130, 94);
-
+		cat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				DisplayCategoryAction();
+			}
+		});
 		hideCategoryButton.setOnAction(new HideCategoryButtonHandler());
 		hboxTop.getChildren().addAll(newButton, vbs, searchField, searchButton, hideButton, removeButton,
 				coordinatesButton);
@@ -500,8 +510,13 @@ public class MapSystem extends Application {
 		}
 	}
 
-	class ShowCategory implements EventHandler<MouseEvent> {
-		public void handle(MouseEvent event) {
+	class DisplayCategoryHandler implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent event) {
+			DisplayCategoryAction();
+		}
+	}
+
+		public void DisplayCategoryAction(){
 			unmarkAll();
 			try {
 				for (Place p : searchList.get(getSelectedCategory())) {
@@ -511,7 +526,7 @@ public class MapSystem extends Application {
 			} catch (NullPointerException e) {
 			}
 		}
-	}
+
 
 	//// FIXA!!!!!!
 
