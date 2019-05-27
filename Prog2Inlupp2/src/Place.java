@@ -118,18 +118,6 @@ public abstract class Place extends Polygon {
 				showPlaceDescription();
 		}
 	}
-
-
-	
-	
-
-	
-
-	
-	
-	
-	
-	
 	
 	abstract void showPlaceDescription();
 	
