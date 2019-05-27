@@ -34,42 +34,23 @@ public class MapSystem extends Application {
 	private Pane mapHolder;
 	private List<Place> places = new ArrayList<>();
 
-	// Hashmap för sökning genom position(x & y)
+	// search based on position
 	private Map<Position, Place> positionList = new HashMap<>();
-	// Hashmap för att söka genom namn
+	// search based on name
 	private TreeMap<String, HashSet<Place>> nameList = new TreeMap<>();
-	// Hashmap för att söka genom kategori
+	// search based on category
 	private TreeMap<String, HashSet<Place>> searchList = new TreeMap<>();
-	// datastuktur för alla markerade platser
-	// ArrayList<Place> markedPlaces = new ArrayList<>();
-
-	// RENSA SENARE, omskrivning av ovanstående
+	// all marked places
 	private ObservableSet<Place> markedPlaces = FXCollections.observableSet();
 
-	// datastruktur för alla underground
-	ArrayList<Place> allUnderground = new ArrayList<>();
-	// datastruktur för alla train
-	ArrayList<Place> allTrain = new ArrayList<>();
-	// datastruktur för alla bus
-	ArrayList<Place> allBus = new ArrayList<>();
-
-	private boolean changed = false;
 	private ToggleGroup group = new ToggleGroup();
-	// private RadioButton namedButton = new RadioButton("Named");
-	// private RadioButton describedButton = new RadioButton("Described");
 	private RadioButton namedPlace, describedPlace;
 	private MenuBar dropDownMenu;
 	private MenuItem saveItem, exitChoiceItem, loadMapItem, loadPlaces;
-	//    private boolean undergroundSelected = false;
-//    private boolean busSelected = false;
-//    private boolean trainSelected = false;
 	private BorderPane root;
 	private Button newButton, searchButton;
-	// private ClickHandler clickHandler = new ClickHandler();
 	private ObservableList<String> categories;
 	private ListView<String> cat;
-	// private Pane display;
-
 	private SimpleBooleanProperty hasChanged = new SimpleBooleanProperty(false);
 
 	@Override
@@ -83,16 +64,11 @@ public class MapSystem extends Application {
 		primaryStage.show();
 		image = new ImageView();
 		mapHolder = new Pane();
-
 		mapHolder.getChildren().add(image);
-
 		root.setCenter(mapHolder);
-		// ((ScrollPane) root.getCenter()).setPadding(new Insets(10));
 
-		// TOP SECTION
-
-		// FILE MENU
-		// root = new BorderPane();
+		// top area
+		// file menu
 		VBox vbox = new VBox();
 		dropDownMenu = new MenuBar();
 		vbox.getChildren().add(dropDownMenu);
@@ -112,18 +88,14 @@ public class MapSystem extends Application {
 		exitChoiceItem.setOnAction(
 				action -> primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST)));
 
-		// TOP INPUT
-
+		// top area input
 		HBox hboxTop = new HBox();
 		vbox.getChildren().add(hboxTop);
 		hboxTop.setPadding(new Insets(10));
 		hboxTop.setSpacing(10);
-
 		hboxTop.setAlignment(Pos.CENTER);
 		newButton = new Button("New");
-		// newButton.setOnAction(new newButtonHandler());
 		newButton.setOnAction(new NewLocation());
-
 		VBox vbs = new VBox();
 		vbs.setSpacing(10);
 		vbs.setPadding(new Insets(10));
@@ -144,31 +116,19 @@ public class MapSystem extends Application {
 		Button coordinatesButton = new Button("Coordinates");
 		coordinatesButton.setOnAction(new CoordinateSearch());
 
-		// RIGHT SECTION
-
+		// right area
 		VBox listan = new VBox();
 		listan.setPadding(new Insets(5));
 		cat = new ListView<String>();
 		categories = FXCollections.observableArrayList("Bus", "Train", "Underground", "None");
-
 		listan.getChildren().add(new Label("Categories"));
 		listan.getChildren().add(cat);
 		cat.setItems(categories);
-
-		// cat.getSelectionModel().selectedItemProperty().addListener(new
-		// ListHandler());
-
 		listan.setAlignment(Pos.CENTER);
 		Button hideCategoryButton = new Button("Hide Category");
 		hideCategoryButton.setAlignment(Pos.CENTER);
 		listan.getChildren().add(hideCategoryButton);
-
-
-		// listan.setPrefSize(200, 200);
-
-		// OBS ändra storlkep på prefsize
-
-		listan.setPrefSize(130, 94);
+		listan.setPrefSize(145, 100);
 		cat.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
@@ -179,15 +139,10 @@ public class MapSystem extends Application {
 		hboxTop.getChildren().addAll(newButton, vbs, searchField, searchButton, hideButton, removeButton,
 				coordinatesButton);
 		root.setTop(vbox);
-		// root.setCenter(imageView);
-		// display.setWrapText(true);
-		// display.getChildren().add(map);
 		root.setRight(listan);
-
 	}
 
 	private String getSelectedCategory() {
-		// Just in case nothing is selected
 		if (cat.getSelectionModel().getSelectedItem() == null)
 			return "None";
 		return cat.getSelectionModel().getSelectedItem();
@@ -204,17 +159,11 @@ public class MapSystem extends Application {
 
 		nameList.putIfAbsent(newPlace.getName(), new HashSet<Place>());
 		nameList.get(newPlace.getName()).add(newPlace);
-
 		searchList.putIfAbsent(newPlace.getCategory(), new HashSet<Place>());
 		searchList.get(newPlace.getCategory()).add(newPlace);
-
 		positionList.put(newPlace.getPosi(), newPlace);
-
-		// Root kan vara display eller liknande
 		root.getChildren().add(newPlace);
 	}
-
-// exit-handler, väldigt lik! putsa upp
 
 	class ExitApplicationHandler implements EventHandler<WindowEvent> {
 		@Override
@@ -228,8 +177,6 @@ public class MapSystem extends Application {
 		}
 	}
 
-	// LOAD MAP HANDLER
-
 	class LoadMapHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent event) {
@@ -238,7 +185,6 @@ public class MapSystem extends Application {
 				fileChooser.setTitle("Open Map File");
 				fileChooser.getExtensionFilters()
 						.addAll(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
-				// fileChooser.setInitialDirectory(new File("C:\\Prog2Inlupp2"));
 				File file = fileChooser.showOpenDialog(primaryStage);
 				if (file == null)
 					return;
@@ -250,29 +196,21 @@ public class MapSystem extends Application {
 				// ois.close();
 				fis.close();
 
-				// ObservableList<String> words =
-				// FXCollections.observableArrayList(uppslag.keySet());
-				// FXCollections.sort(words);
-				// listan.setItems(words);
 			} catch (FileNotFoundException fnfe) {
-				System.err.println("Ingen sån fil!");
-				// }catch(ClassNotFoundException cnff){
-				System.err.println("Fatalt fel har inträffat!");
+				System.err.println("No such file.");
+				System.err.println("Fatal error.");
 			} catch (IOException ioe) {
-				System.err.println("IO-fel har inträffat!");
+				System.err.println("IO-error.");
 				System.err.println(ioe.getMessage());
 			}
 		}
 	}
-
-	// LOAD PLACES HANDLER (direkt kopia)
 
 	class LoadPlacesHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent event) {
 			if (unsaved()) {
 				FileChooser fileChooser = new FileChooser();
-				// fileChooser.setInitialDirectory(new File("C:\\Prog2Inlupp2"));
 				fileChooser.setTitle("Choose places file");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Places files", "*.places"));
 				File choosenFile = fileChooser.showOpenDialog(primaryStage);
@@ -302,12 +240,6 @@ public class MapSystem extends Application {
 			}
 		}
 
-		// så här ser ett place ut i filen: Named,None,191,218,A mitt i
-		// det är alltså: kategori, x coord, y coord, platsnamn
-		// arg 0 är named eller described (typ)
-		// arg 1 är kategori
-		// arg 2 .... nåt fuffens här
-// testar att justera
 		private void createPlace(String[] arg) {
 			if (arg[0].equals("Named"))
 				storePlace(new NamedPlace(arg[4], arg[1], Double.parseDouble(arg[2]), Double.parseDouble(arg[3])));
@@ -317,8 +249,6 @@ public class MapSystem extends Application {
 		}
 
 	}
-
-	// SAVE PLACES HANDLER (direkt kopia)
 
 	class SavePlacesHandler implements EventHandler<ActionEvent> {
 		@Override
@@ -346,8 +276,6 @@ public class MapSystem extends Application {
 		}
 	}
 
-	// COORDINATE SEARCH
-
 	class CoordinateSearch implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
 			try {
@@ -358,16 +286,12 @@ public class MapSystem extends Application {
 					if (Double.parseDouble(dialog.getXCord()) >= 0 && Double.parseDouble(dialog.getYCord()) >= 0) {
 						if (positionList.containsKey(new Position(Double.parseDouble(dialog.getXCord()),
 								Double.parseDouble(dialog.getYCord())))) {
-							// unmarkAll();
 							Place p = positionList.get(new Position(Double.parseDouble(dialog.getXCord()),
 									Double.parseDouble(dialog.getYCord())));
-							// p.setMarkedProperty(true);
 							p.setVisible(true);
-						} // else?
-						// noPlaceError();
+						}
 					}
-				}// else?
-				// negativeNumError();
+				}
 			} catch (NumberFormatException e) {
 				Alert msg = new Alert(AlertType.ERROR);
 				msg.setContentText("Error, incorrect input!");
@@ -380,9 +304,6 @@ public class MapSystem extends Application {
 
 		}
 	}
-
-
-	// NEW NAME PLACE
 
 	class NewLocation implements EventHandler<ActionEvent> {
 		private Place newP;
@@ -490,18 +411,34 @@ public class MapSystem extends Application {
 	}
 
 	class RemoveHandler implements EventHandler<ActionEvent> {
+		@Override
 		public void handle(ActionEvent event) {
-			RemoveButtonAction();
-
+			Iterator<Place> iterator = markedPlaces.iterator();
+			while (iterator.hasNext()) {
+				Place p = iterator.next();
+				iterator.remove();
+				clearFromAll(p);
+			}
+			hasChanged.set(true);
 		}
-	}
 
-	public void RemoveButtonAction() {
-		System.out.println("Remove button clicked");
-		// tar alla platser i datastrukturen markedPlaces -- den innehåller markerade
-		// platser
-		// tar bort dem från samtliga datastrukturer
 
+		private void clearFromAll(Place p) {
+			if (nameList.get(p.getName()).size() > 1)
+				nameList.get(p.getName()).remove(p);
+			else
+				nameList.remove(p.getName());
+
+			if (searchList.get(p.getCategory()).size() > 1)
+				searchList.get(p.getCategory()).remove(p);
+			else
+				searchList.remove(p.getCategory());
+
+			positionList.remove(p.getPosi());
+			markedPlaces.remove(p);
+			mapHolder.getChildren().remove(p);
+			p.setVisible(false);
+		}
 	}
 
 	class HideCategoryButtonHandler implements EventHandler<ActionEvent> {
@@ -535,9 +472,6 @@ public class MapSystem extends Application {
 			}
 		}
 
-
-	//// FIXA!!!!!!
-
 	private void unmarkAll() {
 		Iterator<Place> iterator = markedPlaces.iterator();
 		while (iterator.hasNext()) {
@@ -549,9 +483,6 @@ public class MapSystem extends Application {
 		}
 	}
 
-
-////// UNSAVED METHOD CHANGE.... TYP IDENTISK, ändra allt
-
 	private boolean unsaved() {
 		Optional<ButtonType> response = null;
 		if (hasChanged.get())
@@ -562,8 +493,6 @@ public class MapSystem extends Application {
 		return false;
 	}
 
-	// REMOVE ALL METHOD, direkt kopia pretty much
-
 	private void deleteAll() {
 
 		markedPlaces.clear();
@@ -571,8 +500,6 @@ public class MapSystem extends Application {
 		positionList.clear();
 		searchList.clear();
 	}
-
-	// DIREKT KOPIA PRETTY MUCH
 
 	private void updateMap() {
 		mapHolder.getChildren().clear();
