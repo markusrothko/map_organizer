@@ -352,27 +352,37 @@ public class MapSystem extends Application {
 
 	class CoordinateSearch implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
-			CoordinateHandler dialog = new CoordinateHandler();
-			dialog.setTitle("Input coordinates:");
-			Optional<ButtonType> result = dialog.showAndWait();
-			if (result.isPresent() && result.get() == ButtonType.OK) {
-				if (Double.parseDouble(dialog.getXCord()) >= 0 && Double.parseDouble(dialog.getYCord()) >= 0) {
-					if (positionList.containsKey(new Position(Double.parseDouble(dialog.getXCord()),
-							Double.parseDouble(dialog.getYCord())))) {
-						// unmarkAll();
-						Place p = positionList.get(new Position(Double.parseDouble(dialog.getXCord()),
-								Double.parseDouble(dialog.getYCord())));
-						// p.setMarkedProperty(true);
-						p.setVisible(true);
-					} // else?
+			try {
+				CoordinateHandler dialog = new CoordinateHandler();
+				dialog.setTitle("Input coordinates:");
+				Optional<ButtonType> result = dialog.showAndWait();
+				if (result.isPresent() && result.get() == ButtonType.OK) {
+					if (Double.parseDouble(dialog.getXCord()) >= 0 && Double.parseDouble(dialog.getYCord()) >= 0) {
+						if (positionList.containsKey(new Position(Double.parseDouble(dialog.getXCord()),
+								Double.parseDouble(dialog.getYCord())))) {
+							// unmarkAll();
+							Place p = positionList.get(new Position(Double.parseDouble(dialog.getXCord()),
+									Double.parseDouble(dialog.getYCord())));
+							// p.setMarkedProperty(true);
+							p.setVisible(true);
+						} // else?
 						// noPlaceError();
-				} // else?
+					}
+				}// else?
 					// negativeNumError();
-			}
+				} catch(NumberFormatException e){
+					Alert msg = new Alert(AlertType.ERROR);
+					msg.setContentText("Error, incorrect input!");
+					msg.showAndWait();
+				} catch(NullPointerException e){
+					Alert msg = new Alert(AlertType.ERROR);
+					msg.setContentText("Error, enter all fields please");
+					msg.showAndWait();
+				}
 
+			}
 		}
 
-	}
 
 	// NEW NAME PLACE
 
@@ -400,29 +410,42 @@ public class MapSystem extends Application {
 			}
 		}
 
-		private void createNamedPlace(double x, double y) {
+				private void createNamedPlace(double x, double y) {
 			if (!positionList.containsKey(new Position(x, y))) {
 				NamedPlaceHandler named = new NamedPlaceHandler(x, y);
 				Optional<ButtonType> result = named.showAndWait();
-				if (result.isPresent() && result.get() == ButtonType.OK) {
-					newP = new NamedPlace(named.getName(), getSelectedCategory(), x, y);
-					storePlace(newP);
-					hasChanged.set(true);
+				if (result.equals("OK_DONE") == false) {
+					Alert msg = new Alert(AlertType.ERROR);
+					msg.setContentText("Error, incorrect input!");
+					msg.showAndWait();
+				} else {
+					if (result.isPresent() && result.get() == ButtonType.OK) {
+						newP = new NamedPlace(named.getName(), getSelectedCategory(), x, y);
+						storePlace(newP);
+						hasChanged.set(true);
+					}
 				}
 			} else
 				error("Could not create place here!");
 			restoreFunctionality();
 		}
 
+
 		private void createDescribedPlace(double x, double y) {
 			if (!positionList.containsKey(new Position(x, y))) {
 				DescribedPlaceHandler described = new DescribedPlaceHandler(x, y);
 				Optional<ButtonType> result = described.showAndWait();
-				if (result.isPresent() && result.get() == ButtonType.OK) {
-					newP = new DescribedPlace(described.getName(), getSelectedCategory(), x, y,
-							described.getDescription());
-					storePlace(newP);
-					hasChanged.set(true);
+				if (result != null) {
+					Alert msg = new Alert(AlertType.ERROR);
+					msg.setContentText("Error, incorrect input!");
+					msg.showAndWait();
+				} else {
+					if (result.isPresent() && result.get() == ButtonType.OK) {
+						newP = new DescribedPlace(described.getName(), getSelectedCategory(), x, y,
+								described.getDescription());
+						storePlace(newP);
+						hasChanged.set(true);
+					}
 				}
 			} else
 				error("Could not create place here!");

@@ -1,3 +1,8 @@
+/*
+Markus Bowie, 19841205-0075
+Carl Sunnberg 19990330-3395
+*/
+
 import javafx.scene.paint.Color;
 
 public enum PlaceCategory {
