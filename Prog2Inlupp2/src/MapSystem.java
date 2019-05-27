@@ -60,7 +60,7 @@ public class MapSystem extends Application {
 	private RadioButton namedPlace, describedPlace;
 	private MenuBar dropDownMenu;
 	private MenuItem saveItem, exitChoiceItem, loadMapItem, loadPlaces;
-//    private boolean undergroundSelected = false;
+	//    private boolean undergroundSelected = false;
 //    private boolean busSelected = false;
 //    private boolean trainSelected = false;
 	private BorderPane root;
@@ -162,8 +162,6 @@ public class MapSystem extends Application {
 		Button hideCategoryButton = new Button("Hide Category");
 		hideCategoryButton.setAlignment(Pos.CENTER);
 		listan.getChildren().add(hideCategoryButton);
-
-
 
 
 		// listan.setPrefSize(200, 200);
@@ -369,19 +367,19 @@ public class MapSystem extends Application {
 						// noPlaceError();
 					}
 				}// else?
-					// negativeNumError();
-				} catch(NumberFormatException e){
-					Alert msg = new Alert(AlertType.ERROR);
-					msg.setContentText("Error, incorrect input!");
-					msg.showAndWait();
-				} catch(NullPointerException e){
-					Alert msg = new Alert(AlertType.ERROR);
-					msg.setContentText("Error, enter all fields please");
-					msg.showAndWait();
-				}
-
+				// negativeNumError();
+			} catch (NumberFormatException e) {
+				Alert msg = new Alert(AlertType.ERROR);
+				msg.setContentText("Error, incorrect input!");
+				msg.showAndWait();
+			} catch (NullPointerException e) {
+				Alert msg = new Alert(AlertType.ERROR);
+				msg.setContentText("Error, enter all fields please");
+				msg.showAndWait();
 			}
+
 		}
+	}
 
 
 	// NEW NAME PLACE
@@ -410,42 +408,29 @@ public class MapSystem extends Application {
 			}
 		}
 
-				private void createNamedPlace(double x, double y) {
+		private void createNamedPlace(double x, double y) {
 			if (!positionList.containsKey(new Position(x, y))) {
 				NamedPlaceHandler named = new NamedPlaceHandler(x, y);
 				Optional<ButtonType> result = named.showAndWait();
-				if (result.equals("OK_DONE") == false) {
-					Alert msg = new Alert(AlertType.ERROR);
-					msg.setContentText("Error, incorrect input!");
-					msg.showAndWait();
-				} else {
-					if (result.isPresent() && result.get() == ButtonType.OK) {
-						newP = new NamedPlace(named.getName(), getSelectedCategory(), x, y);
-						storePlace(newP);
-						hasChanged.set(true);
-					}
+				if (result.isPresent() && result.get() == ButtonType.OK) {
+					newP = new NamedPlace(named.getName(), getSelectedCategory(), x, y);
+					storePlace(newP);
+					hasChanged.set(true);
 				}
 			} else
 				error("Could not create place here!");
 			restoreFunctionality();
 		}
 
-
 		private void createDescribedPlace(double x, double y) {
 			if (!positionList.containsKey(new Position(x, y))) {
 				DescribedPlaceHandler described = new DescribedPlaceHandler(x, y);
 				Optional<ButtonType> result = described.showAndWait();
-				if (result != null) {
-					Alert msg = new Alert(AlertType.ERROR);
-					msg.setContentText("Error, incorrect input!");
-					msg.showAndWait();
-				} else {
-					if (result.isPresent() && result.get() == ButtonType.OK) {
-						newP = new DescribedPlace(described.getName(), getSelectedCategory(), x, y,
-								described.getDescription());
-						storePlace(newP);
-						hasChanged.set(true);
-					}
+				if (result.isPresent() && result.get() == ButtonType.OK) {
+					newP = new DescribedPlace(described.getName(), getSelectedCategory(), x, y,
+							described.getDescription());
+					storePlace(newP);
+					hasChanged.set(true);
 				}
 			} else
 				error("Could not create place here!");
