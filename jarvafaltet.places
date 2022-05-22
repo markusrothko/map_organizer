@@ -1,0 +1,23 @@
+Named,Bus,485,335,514
+Named,Underground,666,487,Kista
+Named,Bus,311,147,514
+Named,Bus,634,354,514
+Named,Underground,450,350,Husby
+Named,Bus,762,624,514
+Named,Bus,365,235,514
+Named,Underground,691,528,Kista
+Named,Train,929,317,Hellenelund
+Named,Bus,719,507,514
+Named,Bus,818,382,514
+Named,Bus,94,786,179
+Named,Underground,224,169,Akalla
+Named,Bus,527,259,514
+Named,Bus,883,578,514
+Named,Bus,728,511,179
+Named,Underground,416,313,Husby
+Named,Bus,760,391,514
+Named,None,736,397,NOD
+Named,Bus,137,717,514
+Named,Underground,272,197,Akalla
+Described,None,711,453,Forum,DSV was here until 2014
+Named,Bus,915,475,514
